@@ -1,0 +1,36 @@
+{
+  "format_version": 1,
+  "source": {
+    "label": "ASF48100SU200_V8.16.9.bin",
+    "sha256": "d4b4f4590689ae2effedf40e3999da8d4b9dfdcac7a1eff4635d0eca6d644600",
+    "size": 475136,
+    "trailer_hex": "23016745ab89efcddcfe98ba00000000",
+    "c28x_word_base": "0x84000"
+  },
+  "profiles": {
+    "fan35C_off32C": {
+      "start_c": 35,
+      "stop_c": 32,
+      "curve_origin_c": 35,
+      "output_sha256": "39b3c5cff7f6063e588f7e3f39ddba974e1c2a976df1a31dd239599d9ab35b1c",
+      "patches": [
+        {"offset": "0x24A04", "expected_hex": "c201", "replacement_hex": "5e01", "meaning": "CMP AR6: 450 to 350 deci-C"},
+        {"offset": "0x24A12", "expected_hex": "a401", "replacement_hex": "4001", "meaning": "CMP AR6: 420 to 320 deci-C"},
+        {"offset": "0x24B7E", "expected_hex": "49f8", "replacement_hex": "c9eb", "meaning": "ADDF32 curve origin: -450.0 to -350.0 deci-C"}
+      ],
+      "changed_offsets": ["0x24A04", "0x24A12", "0x24B7E", "0x24B7F"]
+    },
+    "fan40C_off37C": {
+      "start_c": 40,
+      "stop_c": 37,
+      "curve_origin_c": 40,
+      "output_sha256": "97c527aa10bb4c1db72f1bb6d125e152b915d9f493cf9fdcf99828de85f7f2b4",
+      "patches": [
+        {"offset": "0x24A04", "expected_hex": "c201", "replacement_hex": "9001", "meaning": "CMP AR6: 450 to 400 deci-C"},
+        {"offset": "0x24A12", "expected_hex": "a401", "replacement_hex": "7201", "meaning": "CMP AR6: 420 to 370 deci-C"},
+        {"offset": "0x24B7E", "expected_hex": "49f8", "replacement_hex": "09f2", "meaning": "ADDF32 curve origin: -450.0 to -400.0 deci-C"}
+      ],
+      "changed_offsets": ["0x24A04", "0x24A12", "0x24B7E", "0x24B7F"]
+    }
+  }
+}

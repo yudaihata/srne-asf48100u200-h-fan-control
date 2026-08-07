@@ -1,0 +1,18 @@
+# Vendor and generated firmware images are intentionally never redistributed.
+*.bin
+
+# Raw reverse-engineering artifacts and local device logs.
+*.obj
+*.lst
+history*.csv
+
+# Superseded one-off scripts kept locally for provenance.
+/build_fan35_candidate.py
+/build_fan40_candidate.py
+/verify_fan_patch.asm
+
+# Python/editor/macOS noise.
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
