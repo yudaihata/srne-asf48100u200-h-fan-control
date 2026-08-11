@@ -1,6 +1,11 @@
-# SRNE ASF48100 fan-control research
+# Unofficial SRNE ASF48100U200-H Fan-Control Research
 
 [日本語](README.ja.md)
+
+> [!WARNING]
+> This is an independent, unofficial research project. It is not affiliated
+> with, endorsed by, or supported by SRNE Solar Co., Ltd. Modified firmware can
+> damage equipment and create electrical, fire, warranty, or regulatory risks.
 
 Reverse-engineering notes and reproducible tools for the fan-control path in
 the SRNE `ASF48100U200-H` / firmware image labeled
@@ -67,4 +72,6 @@ warranty, regulatory, or equipment risks. See [`docs/safety.md`](docs/safety.md)
 ## License
 
 Tools and original documentation in this repository are MIT licensed. SRNE
-firmware and product names remain the property of their respective owner.
+firmware, product names, trademarks, and derivative firmware images are not
+licensed by this repository and remain the property of their respective owner.
+See [`NOTICE.md`](NOTICE.md).
