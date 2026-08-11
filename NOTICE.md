@@ -9,6 +9,12 @@ documentation authored for this project. It does not grant any rights to SRNE
 firmware, modified or derivative firmware images, product names, trademarks,
 documentation, or other third-party materials.
 
+The limited annotated disassembly excerpts in
+`analysis/v8.16.9-fan-control.annotated.asm` are derived from proprietary SRNE
+firmware and are included only as necessary evidence for commentary and
+analysis. They are not offered under the MIT License, and no rights to the
+underlying firmware code are granted.
+
 No original or modified SRNE firmware image is distributed by this repository.
 Users must obtain any source firmware lawfully, determine whether their use is
 permitted, and accept all risks associated with inspection, modification, and
@@ -28,6 +34,11 @@ jurisdiction.
 MIT Licenseの対象は、本プロジェクトで独自に作成したツールと文書だけです。
 SRNEのファームウェア、改変・派生ファームウェアイメージ、製品名、商標、文書、
 その他の第三者資料に対する権利を付与するものではありません。
+
+`analysis/v8.16.9-fan-control.annotated.asm`に収録した限定的な注釈付き
+逆アセンブル断片は、論評・解析に必要な証拠としてSRNEの専有ファームウェアから
+派生したものです。これらはMIT Licenseの対象ではなく、基礎となるファームウェア
+コードに対する権利を付与するものではありません。
 
 純正または改変済みのSRNEファームウェアイメージは配布しません。利用者は原本を
 適法に入手し、解析・改変・書き込みが許可されるかを自ら確認し、それらに伴う
