@@ -55,6 +55,11 @@ The expected source SHA-256 is
 
 - [`docs/static-analysis.md`](docs/static-analysis.md): recovered control path,
   offsets, instructions, and confidence boundaries.
+- [`docs/porting-to-other-firmware.md`](docs/porting-to-other-firmware.md):
+  evidence-gated re-analysis workflow for AI agents and human reviewers working
+  on another firmware image.
+- [`analysis/v8.16.9-fan-control.annotated.asm`](analysis/v8.16.9-fan-control.annotated.asm):
+  minimal annotated disassembly excerpts supporting the V8.16.9 findings.
 - [`docs/runtime-validation.md`](docs/runtime-validation.md): Home Assistant
   log method and the observed cooling effect of the 35/32 °C profile.
 - [`docs/safety.md`](docs/safety.md): deployment risks and recovery checklist.

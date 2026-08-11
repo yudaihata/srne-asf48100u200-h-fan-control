@@ -56,6 +56,10 @@ python3 tools/verify_candidate.py \
 
 - [`docs/static-analysis.md`](docs/static-analysis.md)：制御ロジック、命令、
   オフセット、静的解析の限界
+- [`docs/porting-to-other-firmware.md`](docs/porting-to-other-firmware.md)：
+  別ファームウェアをAIエージェントまたは人間が再解析するための証拠ベース手順
+- [`analysis/v8.16.9-fan-control.annotated.asm`](analysis/v8.16.9-fan-control.annotated.asm)：
+  V8.16.9の解析結果を裏付ける必要最小限の注釈付き逆アセンブル断片
 - [`docs/runtime-validation.md`](docs/runtime-validation.md)：fan35c実機ログの
   比較方法と冷却効果
 - [`docs/safety.md`](docs/safety.md)：書き込み前の確認事項と未解決リスク
