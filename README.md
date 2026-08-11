@@ -1,4 +1,4 @@
-# Unofficial SRNE ASF48100U200-H Fan-Control Research
+# Unofficial SRNE ASF48100U200-H Fan Control
 
 [日本語](README.ja.md)
 
@@ -27,7 +27,7 @@ size, trailer, and original-byte checks pass.
 ## Browser patcher
 
 For a guided, command-free workflow, use the
-[ASF48100U200-H browser patcher](https://yudaihata.github.io/srne-asf48100u200-h-fan-control-research/).
+[ASF48100U200-H browser patcher](https://yudaihata.github.io/srne-asf48100u200-h-fan-control/).
 The selected BIN never leaves the browser. The page validates the exact source
 SHA-256, size, trailer, original instruction bytes, changed offsets, and final
 candidate SHA-256 before enabling download.
