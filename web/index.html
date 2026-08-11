@@ -3,118 +3,97 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0d1f1d">
+    <meta name="theme-color" content="#ffffff">
     <meta name="description" content="SRNE ASF48100U200-H V8.16.9用の非公式ファン制御ブラウザパッチャー。BINは端末内だけで処理されます。">
     <meta property="og:title" content="ASF48100U200-H Fan-Control Browser Patcher">
-    <meta property="og:description" content="原本を厳格照合し、ブラウザ内だけでファン制御候補BINを生成します。">
+    <meta property="og:description" content="原本を照合し、ブラウザ内だけでファン制御候補BINを生成します。">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://yudaihata.github.io/srne-asf48100u200-h-fan-control-research/">
-    <meta property="og:image" content="https://yudaihata.github.io/srne-asf48100u200-h-fan-control-research/og.png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ASF48100U200-H Fan-Control Browser Patcher">
-    <meta name="twitter:description" content="原本を厳格照合し、ブラウザ内だけでファン制御候補BINを生成します。">
-    <meta name="twitter:image" content="https://yudaihata.github.io/srne-asf48100u200-h-fan-control-research/og.png">
+    <meta name="twitter:card" content="summary">
     <title>ASF48100U200-H Fan-Control Browser Patcher</title>
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
-    <header class="site-header">
-      <a class="brand" href="https://github.com/yudaihata/srne-asf48100u200-h-fan-control-research">ASF48100U200-H <span>Research</span></a>
-      <a class="repo-link" href="https://github.com/yudaihata/srne-asf48100u200-h-fan-control-research">解析資料を見る <span aria-hidden="true">↗</span></a>
+    <header>
+      <h1>ASF48100U200-H<br>Fan-Control Browser Patcher</h1>
+      <p>V8.16.9専用・非公式</p>
     </header>
 
     <main>
-      <section class="hero">
-        <div class="eyebrow"><span class="pulse"></span> 端末内で完結・アップロードなし</div>
-        <h1>ファン制御候補BINを<br><span>ブラウザで安全照合</span></h1>
-        <p class="lead">SRNE ASF48100U200-Hの既知のV8.16.9原本だけに対応。ファイル内容を照合し、確認済みの4バイトだけを変更します。</p>
-        <div class="trust-row" aria-label="安全機能">
-          <div><strong>0 byte</strong><span>外部送信</span></div>
-          <div><strong>4 bytes</strong><span>変更箇所</span></div>
-          <div><strong>SHA-256</strong><span>前後を照合</span></div>
-        </div>
-      </section>
+      <p class="intro">原本BINを確認し、選択したファン制御設定の候補BINを生成します。ファイルは外部へ送信されません。</p>
 
-      <section class="patcher" aria-labelledby="patcher-title">
-        <div class="section-heading">
-          <span class="step-number">1</span>
-          <div><h2 id="patcher-title">原本BINを選ぶ</h2><p>パッチ済み・別バージョン・破損ファイルは自動的に拒否します。</p></div>
-        </div>
+      <section aria-labelledby="file-title">
+        <h2 id="file-title">1. 原本BINを選択</h2>
+        <p>パッチ済み、別バージョン、破損ファイルは拒否されます。</p>
 
-        <label id="drop-zone" class="drop-zone" for="firmware-file">
+        <label id="drop-zone" class="file-picker" for="firmware-file">
           <input id="firmware-file" type="file" accept=".bin,application/octet-stream">
           <span id="file-idle" class="file-idle">
-            <span class="upload-mark" aria-hidden="true">↑</span>
             <strong>BINファイルを選択</strong>
-            <small>または、ここへドラッグ＆ドロップ</small>
+            <small>ドラッグ＆ドロップもできます</small>
           </span>
           <span id="file-info" class="file-info" hidden>
-            <span class="file-mark" aria-hidden="true">BIN</span>
-            <span class="file-primary"><strong id="file-name"></strong><small id="file-size"></small></span>
-            <span class="change-file">別のファイルを選ぶ</span>
+            <strong id="file-name"></strong>
+            <small id="file-size"></small>
+            <span>別のファイルを選択</span>
           </span>
         </label>
 
-        <div class="hash-row"><span>原本SHA-256</span><code id="source-hash">未選択</code></div>
+        <p class="hash-line">原本SHA-256: <code id="source-hash">未選択</code></p>
+      </section>
 
-        <div class="section-heading second">
-          <span class="step-number">2</span>
-          <div><h2>温度設定を選ぶ</h2><p>どちらも標準の保護・ファンロック・MPPT制御には触れません。</p></div>
-        </div>
-
-        <div class="profiles">
-          <label class="profile-card">
+      <section aria-labelledby="profile-title">
+        <h2 id="profile-title">2. 温度設定を選択</h2>
+        <fieldset>
+          <legend>ファンの開始・停止温度</legend>
+          <label class="profile-option">
             <input type="radio" name="profile" value="fan40C_off37C">
-            <span class="radio-mark"></span>
-            <span class="profile-copy"><strong>40 / 37 ℃</strong><small>40℃で開始・37℃で停止</small><em>標準より5℃低い設定。ファンの稼働時間・騒音・摩耗が標準より増える可能性があります。</em></span>
-            <span class="temperature">40<small>℃</small></span>
+            <span><strong>40℃開始 / 37℃停止</strong><small>標準より5℃低い設定。ファンの稼働時間・騒音・摩耗が標準より増える可能性があります。</small></span>
           </label>
-          <label class="profile-card">
+          <label class="profile-option">
             <input type="radio" name="profile" value="fan35C_off32C">
-            <span class="radio-mark"></span>
-            <span class="profile-copy"><strong>35 / 32 ℃</strong><small>35℃で開始・32℃で停止</small><em>40/37℃より温度低下が大きい一方、ファンの稼働時間・騒音・摩耗も増える可能性があります。</em></span>
-            <span class="temperature">35<small>℃</small></span>
+            <span><strong>35℃開始 / 32℃停止</strong><small>40/37℃より温度低下が大きい一方、ファンの稼働時間・騒音・摩耗も増える可能性があります。</small></span>
           </label>
-        </div>
+        </fieldset>
+      </section>
 
-        <div class="section-heading second">
-          <span class="step-number">3</span>
-          <div><h2>注意事項を確認する</h2><p>このツールは候補BINを作るだけで、インバーターへの書き込みは行いません。</p></div>
-        </div>
-
+      <section aria-labelledby="build-title">
+        <h2 id="build-title">3. 候補BINを生成</h2>
         <label class="agreement">
           <input id="agreement" type="checkbox">
-          <span class="check-mark" aria-hidden="true">✓</span>
-          <span>対象が<strong>ASF48100U200-H / V8.16.9</strong>であることを確認し、既知の正常なバックアップとグリッド切替手段を用意しました。非公式改変のリスクを理解しています。</span>
+          <span>対象が<strong>ASF48100U200-H / V8.16.9</strong>であることを確認し、非公式改変のリスクを理解しています。</span>
         </label>
 
         <div id="status" class="status" data-kind="idle" role="status" aria-live="polite">
-          <span id="status-icon" class="status-icon">i</span>
+          <span id="status-icon" class="status-icon" aria-hidden="true">i</span>
           <span><strong id="status-title">原本BINを選択してください</strong><small id="status-detail">ファイルはこの端末内だけで処理されます。</small></span>
         </div>
 
-        <button id="build-button" class="build-button" type="button" disabled><span>候補BINを検証して生成</span><span aria-hidden="true">→</span></button>
+        <button id="build-button" class="primary-button" type="button" disabled>候補BINを検証して生成</button>
 
         <section id="result" class="result" aria-labelledby="result-title" hidden>
-          <div class="result-heading"><span class="result-check">✓</span><div><h2 id="result-title">生成・検証完了</h2><p>元のBINは変更されていません。</p></div></div>
+          <h2 id="result-title">生成・検証完了</h2>
+          <p>元のBINは変更されていません。</p>
           <dl>
             <div><dt>冷却設定</dt><dd id="result-profile"></dd></div>
             <div><dt>変更オフセット</dt><dd><code id="result-offsets"></code></dd></div>
-            <div class="hash-result"><dt>候補SHA-256</dt><dd><code id="result-hash"></code><button id="copy-hash" type="button">SHA-256をコピー</button></dd></div>
+            <div><dt>候補SHA-256</dt><dd><code id="result-hash"></code><button id="copy-hash" type="button">コピー</button></dd></div>
           </dl>
-          <a id="download-link" class="download-button" download>候補BINをダウンロード <span aria-hidden="true">↓</span></a>
-          <p class="result-note">書き込み前に、ダウンロードしたファイルをリポジトリの検証ツールでも確認できます。</p>
+          <a id="download-link" class="primary-button" download>候補BINをダウンロード</a>
         </section>
       </section>
 
-      <section class="safety">
-        <div><span class="safety-mark">!</span><h2>重要な安全情報</h2></div>
+      <details class="safety">
+        <summary>安全上の注意</summary>
         <p>非公式ファームウェアの書き込みは、機器の使用不能、感電、火災、保証・法規上の問題につながる可能性があります。別型番・別バージョンには使用しないでください。公式のリカバリー手順は確認されていません。</p>
-        <a href="https://github.com/yudaihata/srne-asf48100u200-h-fan-control-research/blob/main/docs/safety.md">安全事項をすべて読む <span aria-hidden="true">→</span></a>
-      </section>
+        <a href="https://github.com/yudaihata/srne-asf48100u200-h-fan-control-research/blob/main/docs/safety.md">安全事項をすべて読む</a>
+      </details>
     </main>
 
-    <footer><p>Unofficial independent research. Not affiliated with or endorsed by SRNE Solar Co., Ltd.</p><p>処理はすべてブラウザ内で実行され、選択したBINはサーバーへ送信されません。</p></footer>
+    <footer>
+      <a href="https://github.com/yudaihata/srne-asf48100u200-h-fan-control-research">GitHubリポジトリ</a>
+      <p>Unofficial independent research. Not affiliated with or endorsed by SRNE Solar Co., Ltd.</p>
+    </footer>
     <script type="module" src="./app.js"></script>
   </body>
 </html>
