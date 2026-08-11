@@ -17,12 +17,20 @@ profiles are documented:
 
 | Profile | Start | Stop | Curve origin | Intended use |
 |---|---:|---:|---:|---|
-| `fan40C_off37C` | 40 °C | 37 °C | 40 °C | Moderate, 5 °C shift |
-| `fan35C_off32C` | 35 °C | 32 °C | 35 °C | Aggressive cooling |
+| `fan40C_off37C` | 40 °C | 37 °C | 40 °C | 5 °C below stock; increased fan runtime/noise possible |
+| `fan35C_off32C` | 35 °C | 32 °C | 35 °C | Larger temperature reduction; more fan runtime/noise/wear possible |
 
 No vendor firmware or patched firmware is distributed. The builder refuses to
 operate unless the user supplies the exact known source image and all hash,
 size, trailer, and original-byte checks pass.
+
+## Browser patcher
+
+For a guided, command-free workflow, use the
+[ASF48100U200-H browser patcher](https://yudaihata.github.io/srne-asf48100u200-h-fan-control-research/).
+The selected BIN never leaves the browser. The page validates the exact source
+SHA-256, size, trailer, original instruction bytes, changed offsets, and final
+candidate SHA-256 before enabling download.
 
 ## Quick start
 
