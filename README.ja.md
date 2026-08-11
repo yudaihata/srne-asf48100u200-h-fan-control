@@ -1,4 +1,4 @@
-# 非公式 SRNE ASF48100U200-H ファン制御解析
+# 非公式 SRNE ASF48100U200-H ファン制御
 
 [English](README.md)
 
@@ -27,7 +27,7 @@ SRNE `ASF48100U200-H` のファームウェア
 ## ブラウザパッチャー
 
 コマンド操作なしで利用する場合は、
-[ASF48100U200-Hブラウザパッチャー](https://yudaihata.github.io/srne-asf48100u200-h-fan-control-research/)
+[ASF48100U200-Hブラウザパッチャー](https://yudaihata.github.io/srne-asf48100u200-h-fan-control/)
 を使用できます。選択したBINはブラウザ外へ送信されません。原本SHA-256、
 サイズ、末尾マーカー、変更前命令、変更オフセット、生成後SHA-256がすべて
 一致した場合だけ候補BINをダウンロードできます。
