@@ -37,8 +37,11 @@ function assertBytesAt(image, offset, expected, code) {
 }
 
 export function validateManifest(manifest) {
-  if (manifest?.format_version !== 1 || !manifest.source || !manifest.profiles || !manifest.constraints) {
+  if (manifest?.format_version !== 2 || !manifest.source || !manifest.profiles || !manifest.constraints) {
     throw new PatcherError("MANIFEST", "Unsupported or incomplete profile manifest");
+  }
+  if (!/^[0-9a-f]{64}$/.test(manifest.source.sha256) || !Number.isInteger(manifest.source.size)) {
+    throw new PatcherError("MANIFEST", "Invalid source identity");
   }
 
   const constraints = manifest.constraints;
@@ -67,6 +70,35 @@ export function validateManifest(manifest) {
       || profile.curve_origin_c !== profile.start_c
     ) {
       throw new PatcherError("MANIFEST", `Invalid reviewed temperatures: ${name}`);
+    }
+    if (
+      profile.evidence?.static_encoding !== "confirmed-static"
+      || !["confirmed-static", "stock-equivalent"].includes(profile.evidence?.candidate_identity)
+      || !["runtime-observed", "not-established"].includes(profile.evidence?.runtime)
+      || (profile.evidence.runtime === "runtime-observed" && !profile.evidence.runtime_document)
+    ) {
+      throw new PatcherError("MANIFEST", `Invalid evidence metadata: ${name}`);
+    }
+
+    const changed = [];
+    const covered = new Set();
+    for (const patch of profile.patches) {
+      const offset = Number.parseInt(patch.offset, 16);
+      const before = bytesFromHex(patch.expected_hex);
+      const after = bytesFromHex(patch.replacement_hex);
+      if (!Number.isInteger(offset) || offset < 0 || offset + before.length > manifest.source.size || before.length !== after.length) {
+        throw new PatcherError("MANIFEST", `Invalid patch bounds: ${name}`);
+      }
+      for (let index = 0; index < before.length; index += 1) {
+        const position = offset + index;
+        if (covered.has(position)) throw new PatcherError("MANIFEST", `Overlapping patches: ${name}`);
+        covered.add(position);
+        if (before[index] !== after[index]) changed.push(position);
+      }
+    }
+    const declared = profile.changed_offsets.map((value) => Number.parseInt(value, 16));
+    if (changed.length !== declared.length || changed.some((value, index) => value !== declared[index])) {
+      throw new PatcherError("MANIFEST", `Invalid changed offsets: ${name}`);
     }
   }
   return manifest;
@@ -138,4 +170,33 @@ export async function buildCandidate(source, manifest, profileName) {
 
 export function outputFileName(profileName) {
   return `ASF48100SU200_V8.16.9_${profileName}.bin`;
+}
+
+export function buildProvenance(manifest, profileName, result, buildInfo = {}, createdAt = new Date().toISOString()) {
+  const profile = manifest.profiles[profileName];
+  if (!profile) throw new PatcherError("PROFILE", `Unknown profile: ${profileName}`);
+  return {
+    format: "srne-fan-candidate-provenance-v1",
+    created_at: createdAt,
+    repository: buildInfo.repository ?? "yudaihata/srne-asf48100u200-h-fan-control",
+    repository_commit: buildInfo.commit ?? "unknown",
+    manifest_format_version: manifest.format_version,
+    source: {
+      label: manifest.source.label,
+      sha256: manifest.source.sha256,
+      size: manifest.source.size,
+    },
+    profile: {
+      name: profileName,
+      start_c: profile.start_c,
+      max_c: profile.max_c,
+      stop_c: profile.stop_c,
+      evidence: profile.evidence,
+    },
+    candidate: {
+      filename: outputFileName(profileName),
+      sha256: result.sha256,
+      changed_offsets: result.changedOffsets.map((value) => `0x${value.toString(16).toUpperCase()}`),
+    },
+  };
 }

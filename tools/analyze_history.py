@@ -20,6 +20,11 @@ ALIASES = {
 }
 
 
+def optional_float(value: object) -> float | None:
+    """Return JSON-safe numeric output for possibly empty pandas reductions."""
+    return None if pd.isna(value) else float(value)
+
+
 def reconstruct(path: Path, timezone: str) -> pd.DataFrame:
     raw = pd.read_csv(path, dtype={"entity_id": "string", "state": "string"})
     required = {"entity_id", "state", "last_changed"}
@@ -67,14 +72,14 @@ def stats(data: pd.DataFrame) -> dict[str, object]:
         for column in ["outdoor", "load", "pv2", "battery", "temp_a", "temp_b", "temp_c"]:
             series = frame[column]
             values[column] = {
-                "mean": float(series.mean()),
-                "p95": float(series.quantile(0.95)),
-                "min": float(series.min()),
-                "max": float(series.max()),
+                "mean": optional_float(series.mean()),
+                "p95": optional_float(series.quantile(0.95)),
+                "min": optional_float(series.min()),
+                "max": optional_float(series.max()),
             }
         for sensor in ["a", "b", "c"]:
             delta = frame[f"temp_{sensor}"] - frame.outdoor
-            values[f"temp_{sensor}_minus_outdoor_mean"] = float(delta.mean())
+            values[f"temp_{sensor}_minus_outdoor_mean"] = optional_float(delta.mean())
         values["minutes_at_or_above_50c"] = {
             sensor: int((frame[f"temp_{sensor}"] >= 50).sum()) for sensor in ["a", "b", "c"]
         }
@@ -92,12 +97,20 @@ def compare(stock: dict[str, object], candidate: dict[str, object]) -> dict[str,
         after = candidate_regimes[name]
         row: dict[str, object] = {}
         for column in ["outdoor", "load", "pv2", "battery", "temp_a", "temp_b", "temp_c"]:
-            row[f"{column}_mean_delta"] = float(
-                after[column]["mean"] - before[column]["mean"]
+            before_mean = before[column]["mean"]
+            after_mean = after[column]["mean"]
+            row[f"{column}_mean_delta"] = (
+                None
+                if before_mean is None or after_mean is None
+                else float(after_mean - before_mean)
             )
         for sensor in ["a", "b", "c"]:
             key = f"temp_{sensor}_minus_outdoor_mean"
-            row[f"{key}_delta"] = float(after[key] - before[key])
+            row[f"{key}_delta"] = (
+                None
+                if before[key] is None or after[key] is None
+                else float(after[key] - before[key])
+            )
             row[f"temp_{sensor}_minutes_at_or_above_50c_delta"] = int(
                 after["minutes_at_or_above_50c"][sensor]
                 - before["minutes_at_or_above_50c"][sensor]

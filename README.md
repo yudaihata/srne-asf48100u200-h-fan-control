@@ -44,7 +44,9 @@ advanced custom analysis. It requires Python 3.11 or later.
 
 ### Reviewed profile
 
-Generate one of the same pre-reviewed candidates exposed by the browser:
+Generate one of the same statically reviewed candidates exposed by the browser.
+The builder also writes a provenance JSON sidecar containing source and
+candidate hashes, changed offsets, repository identity, and evidence level:
 
 ```bash
 python3 tools/build_candidate.py \
@@ -88,8 +90,8 @@ python3 tools/verify_candidate.py \
 
 Custom mode requires `1 <= start <= 50 °C`, `start < max <= 100 °C`, and
 `0 <= stop < start °C`. The start limit keeps every integer-C curve origin
-exactly representable by the C28x immediate encoding. It intentionally does
-not enforce the browser's 10 °C minimum span. These candidates have no
+exactly representable by the C28x immediate encoding. Custom mode enforces the
+same 10 °C minimum span as the browser. These candidates have no
 pre-reviewed output hash or runtime
 validation; the tools instead derive the C28x instructions, report the exact
 changed bytes and candidate hash, and require the same settings plus pristine
@@ -113,6 +115,10 @@ The expected source SHA-256 is
 - [`docs/safety.md`](docs/safety.md): deployment risks and recovery checklist.
 - [`profiles/profiles.json`](profiles/profiles.json): machine-readable source and
   profile definitions.
+- [`spec/`](spec/): concise canonical inputs used to generate the manifest.
+- [`docs/evidence-levels.md`](docs/evidence-levels.md): precise separation of
+  static identity and runtime observations.
+- [`docs/release-process.md`](docs/release-process.md): reproducible publication gate.
 - [`tools/build_candidate.py`](tools/build_candidate.py): guarded candidate
   builder.
 - [`tools/verify_candidate.py`](tools/verify_candidate.py): independent image

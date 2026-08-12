@@ -1,0 +1,16 @@
+entity_id,state,last_changed
+sensor.gw2000c_outdoor_temperature,30,2026-08-02T00:00:00Z
+sensor.srne_inverter_battery_power,100,2026-08-02T00:00:00Z
+sensor.srne_inverter_heatsink_temperature_a,40,2026-08-02T00:00:00Z
+sensor.srne_inverter_heatsink_temperature_b,45,2026-08-02T00:00:00Z
+sensor.srne_inverter_heatsink_temperature_c,48,2026-08-02T00:00:00Z
+sensor.srne_inverter_load_total_active_power,1200,2026-08-02T00:00:00Z
+sensor.srne_inverter_pv2_power,0,2026-08-02T00:00:00Z
+sensor.gw2000c_outdoor_temperature,unknown,2026-08-02T00:01:00Z
+sensor.gw2000c_outdoor_temperature,31,2026-08-02T00:02:00Z
+sensor.srne_inverter_battery_power,120,2026-08-02T00:02:00Z
+sensor.srne_inverter_heatsink_temperature_a,41,2026-08-02T00:02:00Z
+sensor.srne_inverter_heatsink_temperature_b,46,2026-08-02T00:02:00Z
+sensor.srne_inverter_heatsink_temperature_c,49,2026-08-02T00:02:00Z
+sensor.srne_inverter_load_total_active_power,1300,2026-08-02T00:02:00Z
+sensor.srne_inverter_pv2_power,200,2026-08-02T00:02:00Z

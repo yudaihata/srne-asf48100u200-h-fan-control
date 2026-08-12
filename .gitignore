@@ -5,21 +5,16 @@
 *.obj
 *.lst
 *.csv
-
-# MPPT and structural-discovery research are not part of this public project.
-/analysis/verify_mppt*.asm
-/docs/mppt*.md
-/docs/compatibility-scanning.md
-/profiles/fan_signature.json
-/tests/test_discovery.py
-/tools/build_discovered_candidate.py
-/tools/discovery.py
-/tools/scan_compatibility.py
+!/tests/fixtures/*.csv
 
 # Superseded one-off scripts kept locally for provenance.
 /build_fan35_candidate.py
 /build_fan40_candidate.py
 /verify_fan_patch.asm
+
+# Local validation reports accompany generated BINs but are not source files.
+*.bin.provenance.json
+/release-validation.json
 
 # Python/editor/macOS noise.
 __pycache__/

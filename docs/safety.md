@@ -32,7 +32,8 @@ Known unresolved risks include:
 The browser exposes only the 14 statically reviewed combinations. The manual
 CLI also has an explicitly acknowledged custom mode for advanced analysis. A
 custom candidate is not part of that reviewed set, has no pre-reviewed output
-hash or runtime result, and can use a start-to-maximum span below 10 °C. Treat
+hash or runtime result. The CLI now enforces the same minimum 10 °C
+start-to-maximum span as the reviewed set. Treat
 its exact settings, generated hash, disassembly, and runtime behavior as a new
 candidate requiring separate review.
 

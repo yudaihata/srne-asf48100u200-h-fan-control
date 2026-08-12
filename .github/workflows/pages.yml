@@ -6,6 +6,10 @@ on:
     paths:
       - "web/**"
       - "profiles/profiles.json"
+      - "spec/**"
+      - "tools/generate_manifest.py"
+      - "tools/common.py"
+      - "tests/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -25,17 +29,32 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/configure-pages@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "24"
+      - name: Verify generated manifest and patcher
+        run: |
+          python tools/generate_manifest.py --check
+          python -m unittest discover -s tests -v
+          node --test tests/test_web_patcher.mjs
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
       - name: Assemble static site
         run: |
           mkdir -p _site
           cp -R web/. _site/
           cp profiles/profiles.json _site/profiles.json
+          jq -n \
+            --arg repository "${GITHUB_REPOSITORY}" \
+            --arg commit "${GITHUB_SHA}" \
+            '{repository: $repository, commit: $commit}' > _site/build-info.json
           touch _site/.nojekyll
-      - uses: actions/upload-pages-artifact@v5
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: _site
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5

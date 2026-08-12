@@ -4,6 +4,9 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
+import json
+import os
 from pathlib import Path
 
 from common import (
@@ -31,6 +34,11 @@ def parse_args() -> argparse.Namespace:
         help="required for custom temperatures not in the reviewed manifest",
     )
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--provenance-output",
+        type=Path,
+        help="sidecar path (default: OUTPUT.provenance.json)",
+    )
     args = parser.parse_args()
     custom_requested = args.start_c is not None or args.max_c is not None or args.stop_c is not None
     if bool(args.profile) == custom_requested:
@@ -52,17 +60,59 @@ def main() -> int:
         profile = resolve_profile(args.profile, manifest)
         candidate, changed = apply_profile(source, profile)
         mode = f"reviewed profile {args.profile}"
+        profile_name = args.profile
     else:
         stop_c = args.stop_c if args.stop_c is not None else args.start_c - 3
         profile, candidate, changed = materialize_custom_profile(
             source, args.start_c, args.max_c, stop_c
         )
         mode = f"UNREVIEWED custom {args.start_c}/{args.max_c}/{stop_c} C"
+        profile_name = f"custom_{args.start_c}_{args.max_c}_{stop_c}"
 
     validate_candidate(candidate, profile, manifest, source)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_bytes(candidate)
+    provenance_path = args.provenance_output or args.output.with_name(
+        f"{args.output.name}.provenance.json"
+    )
+    provenance = {
+        "format": "srne-fan-candidate-provenance-v1",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "repository": "yudaihata/srne-asf48100u200-h-fan-control",
+        "repository_commit": os.environ.get("GITHUB_SHA", "local-working-tree"),
+        "manifest_format_version": manifest["format_version"],
+        "source": {
+            "label": manifest["source"]["label"],
+            "sha256": sha256(source),
+            "size": len(source),
+        },
+        "profile": {
+            "name": profile_name,
+            "start_c": profile["start_c"],
+            "max_c": profile["max_c"],
+            "stop_c": profile["stop_c"],
+            "evidence": profile.get(
+                "evidence",
+                {
+                    "static_encoding": "derived-not-reviewed",
+                    "candidate_identity": "derived-not-reviewed",
+                    "runtime": "not-established",
+                    "runtime_document": None,
+                },
+            ),
+        },
+        "candidate": {
+            "filename": args.output.name,
+            "sha256": sha256(candidate),
+            "changed_offsets": [f"0x{offset:X}" for offset in changed],
+        },
+    }
+    provenance_path.parent.mkdir(parents=True, exist_ok=True)
+    provenance_path.write_text(
+        json.dumps(provenance, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     print(f"mode:             {mode}")
     if not args.profile:
         print("warning:          custom temperatures are not pre-reviewed or runtime-validated")
@@ -70,6 +120,7 @@ def main() -> int:
     print(f"candidate sha256: {sha256(candidate)}")
     print("changed offsets:  " + ", ".join(f"{offset:#x}" for offset in changed))
     print(f"wrote:            {args.output}")
+    print(f"provenance:       {provenance_path}")
     return 0
 
 
