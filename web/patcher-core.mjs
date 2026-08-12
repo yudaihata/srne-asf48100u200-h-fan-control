@@ -37,17 +37,46 @@ function assertBytesAt(image, offset, expected, code) {
 }
 
 export function validateManifest(manifest) {
-  if (manifest?.format_version !== 1 || !manifest.source || !manifest.profiles) {
+  if (manifest?.format_version !== 1 || !manifest.source || !manifest.profiles || !manifest.constraints) {
     throw new PatcherError("MANIFEST", "Unsupported or incomplete profile manifest");
   }
-  const required = ["fan40C_off37C", "fan35C_off32C"];
-  for (const name of required) {
+
+  const constraints = manifest.constraints;
+  const expected = [];
+  for (const start of constraints.allowed_start_c ?? []) {
+    for (const maximum of constraints.allowed_max_c ?? []) {
+      if (maximum - start < constraints.minimum_span_c) continue;
+      const stop = start - constraints.stop_delta_c;
+      expected.push(`fan${start}C_max${maximum}C_off${stop}C`);
+    }
+  }
+
+  const actual = Object.keys(manifest.profiles).sort();
+  if (expected.length !== 14 || actual.join("\n") !== expected.sort().join("\n")) {
+    throw new PatcherError("MANIFEST", "Reviewed fan profile set is incomplete");
+  }
+
+  for (const name of expected) {
     const profile = manifest.profiles[name];
     if (!profile?.patches?.length || !profile?.output_sha256 || !profile?.changed_offsets) {
       throw new PatcherError("MANIFEST", `Missing reviewed profile: ${name}`);
     }
+    if (
+      profile.stop_c !== profile.start_c - constraints.stop_delta_c
+      || profile.max_c - profile.start_c < constraints.minimum_span_c
+      || profile.curve_origin_c !== profile.start_c
+    ) {
+      throw new PatcherError("MANIFEST", `Invalid reviewed temperatures: ${name}`);
+    }
   }
   return manifest;
+}
+
+export function profileNameForTemperatures(manifest, startC, maxC) {
+  validateManifest(manifest);
+  const stopC = startC - manifest.constraints.stop_delta_c;
+  const name = `fan${startC}C_max${maxC}C_off${stopC}C`;
+  return manifest.profiles[name] ? name : undefined;
 }
 
 export async function inspectSource(source, manifest) {

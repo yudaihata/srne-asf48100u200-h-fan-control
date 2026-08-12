@@ -44,17 +44,29 @@
 
       <section aria-labelledby="profile-title">
         <h2 id="profile-title">2. 温度設定を選択</h2>
-        <fieldset>
-          <legend>ファンの開始・停止温度</legend>
-          <label class="profile-option">
-            <input type="radio" name="profile" value="fan40C_off37C">
-            <span><strong>40℃開始 / 37℃停止</strong><small>標準より5℃低い設定。ファンの稼働時間・騒音・摩耗が標準より増える可能性があります。</small></span>
-          </label>
-          <label class="profile-option">
-            <input type="radio" name="profile" value="fan35C_off32C">
-            <span><strong>35℃開始 / 32℃停止</strong><small>40/37℃より温度低下が大きい一方、ファンの稼働時間・騒音・摩耗も増える可能性があります。</small></span>
-          </label>
-        </fieldset>
+        <div class="temperature-settings">
+          <label for="start-temperature">ファン開始温度</label>
+          <select id="start-temperature">
+            <option value="">選択してください</option>
+            <option value="35">35℃</option>
+            <option value="40">40℃</option>
+            <option value="45">45℃</option>
+          </select>
+
+          <label for="max-temperature">ファン最大温度</label>
+          <select id="max-temperature">
+            <option value="">選択してください</option>
+            <option value="50">50℃</option>
+            <option value="55">55℃</option>
+            <option value="60">60℃</option>
+            <option value="65">65℃</option>
+            <option value="70">70℃</option>
+          </select>
+
+          <span>ファン停止温度</span>
+          <output id="stop-temperature">開始温度を選択してください</output>
+        </div>
+        <p class="temperature-note">低い温度設定ほど、ファンの稼働時間・騒音・摩耗が増える可能性があります。負荷・充電・放電条件によっては、選択温度より低くてもファン出力が上がる場合があります。</p>
       </section>
 
       <section aria-labelledby="build-title">

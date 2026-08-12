@@ -3,6 +3,7 @@ import {
   buildCandidate,
   inspectSource,
   outputFileName,
+  profileNameForTemperatures,
   validateManifest,
 } from "./patcher-core.mjs";
 
@@ -14,6 +15,9 @@ const ui = {
   fileName: document.querySelector("#file-name"),
   fileSize: document.querySelector("#file-size"),
   sourceHash: document.querySelector("#source-hash"),
+  startTemperature: document.querySelector("#start-temperature"),
+  maxTemperature: document.querySelector("#max-temperature"),
+  stopTemperature: document.querySelector("#stop-temperature"),
   agreement: document.querySelector("#agreement"),
   buildButton: document.querySelector("#build-button"),
   status: document.querySelector("#status"),
@@ -26,11 +30,6 @@ const ui = {
   resultOffsets: document.querySelector("#result-offsets"),
   download: document.querySelector("#download-link"),
   copyHash: document.querySelector("#copy-hash"),
-};
-
-const profileLabels = {
-  fan40C_off37C: "40℃開始 / 37℃停止",
-  fan35C_off32C: "35℃開始 / 32℃停止",
 };
 
 const errorMessages = {
@@ -52,7 +51,35 @@ let sourceValid = false;
 let downloadUrl;
 
 function selectedProfile() {
-  return document.querySelector('input[name="profile"]:checked')?.value;
+  if (!manifest) return undefined;
+  const start = Number.parseInt(ui.startTemperature.value, 10);
+  const maximum = Number.parseInt(ui.maxTemperature.value, 10);
+  if (!Number.isFinite(start) || !Number.isFinite(maximum)) return undefined;
+  return profileNameForTemperatures(manifest, start, maximum);
+}
+
+function profileLabel(profile) {
+  return `${profile.start_c}℃開始 / ${profile.max_c}℃最大 / ${profile.stop_c}℃停止`;
+}
+
+function updateTemperatureSettings() {
+  if (!manifest) return;
+  const start = Number.parseInt(ui.startTemperature.value, 10);
+  const { minimum_span_c: minimumSpan, stop_delta_c: stopDelta } = manifest.constraints;
+
+  for (const option of ui.maxTemperature.options) {
+    if (!option.value) continue;
+    const maximum = Number.parseInt(option.value, 10);
+    option.disabled = Number.isFinite(start) && maximum - start < minimumSpan;
+  }
+  if (ui.maxTemperature.selectedOptions[0]?.disabled) ui.maxTemperature.value = "";
+
+  ui.stopTemperature.textContent = Number.isFinite(start)
+    ? `${start - stopDelta}℃（開始温度 − ${stopDelta}℃）`
+    : "開始温度を選択してください";
+
+  resetResult();
+  updateButton();
 }
 
 function formatBytes(value) {
@@ -129,12 +156,15 @@ async function build() {
     const profile = selectedProfile();
     const result = await buildCandidate(sourceBytes, manifest, profile);
     const name = outputFileName(profile);
+    const profileDefinition = manifest.profiles[profile];
     downloadUrl = URL.createObjectURL(new Blob([result.bytes], { type: "application/octet-stream" }));
     ui.download.href = downloadUrl;
     ui.download.download = name;
-    ui.resultProfile.textContent = profileLabels[profile];
+    ui.resultProfile.textContent = profileLabel(profileDefinition);
     ui.resultHash.textContent = result.sha256;
-    ui.resultOffsets.textContent = result.changedOffsets.map((value) => `0x${value.toString(16).toUpperCase()}`).join(", ");
+    ui.resultOffsets.textContent = result.changedOffsets.length
+      ? result.changedOffsets.map((value) => `0x${value.toString(16).toUpperCase()}`).join(", ")
+      : "変更なし（純正設定と同一）";
     ui.result.hidden = false;
     setStatus("success", "候補BINの検証が完了しました", "元ファイルは変更されていません。下のボタンから候補BINを保存できます。");
     ui.result.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -146,12 +176,8 @@ async function build() {
 
 ui.fileInput.addEventListener("change", () => loadFile(ui.fileInput.files?.[0]));
 ui.agreement.addEventListener("change", updateButton);
-document.querySelectorAll('input[name="profile"]').forEach((input) => {
-  input.addEventListener("change", () => {
-    resetResult();
-    updateButton();
-  });
-});
+ui.startTemperature.addEventListener("change", updateTemperatureSettings);
+ui.maxTemperature.addEventListener("change", updateTemperatureSettings);
 ui.buildButton.addEventListener("click", build);
 ui.copyHash.addEventListener("click", async () => {
   await navigator.clipboard.writeText(ui.resultHash.textContent);
@@ -177,7 +203,7 @@ try {
   const response = await fetch("./profiles.json", { cache: "no-store" });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   manifest = validateManifest(await response.json());
-  updateButton();
+  updateTemperatureSettings();
 } catch (error) {
   showError(new PatcherError("MANIFEST", error.message));
 }

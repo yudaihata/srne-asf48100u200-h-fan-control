@@ -302,7 +302,8 @@ The builder and an independent verifier should both enforce:
 - successful disassembly of each replacement instruction.
 
 For multiword C28x instructions, count actual changed bytes. In the V8.16.9
-profiles, the upper byte of one continuation word is unchanged, so the exact
+35/60/32 °C and 40/65/37 °C profiles, the stock curve slope is retained and the
+upper byte of one threshold continuation word is unchanged, so the exact
 changed-byte set is:
 
 ```text
@@ -310,7 +311,9 @@ changed-byte set is:
 ```
 
 Do not incorrectly include `0x24A05` merely because it belongs to the patched
-instruction word.
+instruction word. Profiles that change the temperature-curve slope also touch
+the reviewed `MOVIZ`/`MOVXI` immediate words and have their own exact
+changed-offset sets in `profiles/profiles.json`.
 
 ### 10. Separate static completion from runtime validation
 
