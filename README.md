@@ -29,26 +29,34 @@ No vendor firmware or patched firmware is distributed. The builder refuses to
 operate unless the user supplies the exact known source image and all hash,
 size, trailer, and original-byte checks pass.
 
-## Browser patcher
+## Quick start
 
-For a guided, command-free workflow, use the
+For normal use, open the
 [ASF48100U200-H browser patcher](https://yudaihata.github.io/srne-asf48100u200-h-fan-control/).
 The selected BIN never leaves the browser. The page validates the exact source
 SHA-256, size, trailer, original instruction bytes, changed offsets, and final
 candidate SHA-256 before enabling download.
 
-## Quick start: manual CLI
+## Manual CLI and reproducibility
 
-Requires Python 3.11 or later.
+The CLI is intended for offline use, automation, independent reproduction, and
+advanced custom analysis. It requires Python 3.11 or later.
 
-Use a pre-reviewed profile when possible:
+### Reviewed profile
+
+Generate one of the same pre-reviewed candidates exposed by the browser:
 
 ```bash
 python3 tools/build_candidate.py \
   --source /path/to/ASF48100SU200_V8.16.9.bin \
   --profile fan40C_max65C_off37C \
   --output /path/to/ASF48100SU200_V8.16.9_fan40C_max65C_off37C.bin
+```
 
+To independently reproduce and verify the candidate hash and exact source
+diff:
+
+```bash
 python3 tools/verify_candidate.py \
   --candidate /path/to/ASF48100SU200_V8.16.9_fan40C_max65C_off37C.bin \
   --profile fan40C_max65C_off37C \
@@ -57,6 +65,8 @@ python3 tools/verify_candidate.py \
 
 The former names `fan35C_off32C` and `fan40C_off37C` remain accepted as aliases
 for the unchanged 35/60/32 °C and 40/65/37 °C candidates.
+
+### Advanced custom temperatures
 
 Advanced users can specify integer-C temperatures outside the browser's
 reviewed 14-combination allowlist. Stop defaults to start minus 3 °C when
@@ -78,8 +88,9 @@ python3 tools/verify_candidate.py \
 
 Custom mode requires `1 <= start <= 50 °C`, `start < max <= 100 °C`, and
 `0 <= stop < start °C`. The start limit keeps every integer-C curve origin
-exactly representable by the C28x immediate encoding. It intentionally does not enforce the browser's 10 °C
-minimum span. These candidates have no pre-reviewed output hash or runtime
+exactly representable by the C28x immediate encoding. It intentionally does
+not enforce the browser's 10 °C minimum span. These candidates have no
+pre-reviewed output hash or runtime
 validation; the tools instead derive the C28x instructions, report the exact
 changed bytes and candidate hash, and require the same settings plus pristine
 source for verification. The acknowledgement flag prevents accidental use of
