@@ -7,30 +7,708 @@
     "trailer_hex": "23016745ab89efcddcfe98ba00000000",
     "c28x_word_base": "0x84000"
   },
+  "constraints": {
+    "allowed_start_c": [
+      35,
+      40,
+      45
+    ],
+    "allowed_max_c": [
+      50,
+      55,
+      60,
+      65,
+      70
+    ],
+    "minimum_span_c": 10,
+    "stop_delta_c": 3
+  },
+  "profile_aliases": {
+    "fan35C_off32C": "fan35C_max60C_off32C",
+    "fan40C_off37C": "fan40C_max65C_off37C"
+  },
   "profiles": {
-    "fan35C_off32C": {
+    "fan35C_max50C_off32C": {
       "start_c": 35,
+      "max_c": 50,
       "stop_c": 32,
       "curve_origin_c": 35,
+      "slope_f32": 0.46666666865348816,
+      "output_sha256": "b3b1f06579af8e35a374a858b642e6aafdd55f90bff7ddf4b8898c764f181618",
+      "patches": [
+        {
+          "offset": "0x24A04",
+          "expected_hex": "c201",
+          "replacement_hex": "5e01",
+          "meaning": "CMP AR6: 450 to 350 deci-C"
+        },
+        {
+          "offset": "0x24A12",
+          "expected_hex": "a401",
+          "replacement_hex": "4001",
+          "meaning": "CMP AR6: 420 to 320 deci-C"
+        },
+        {
+          "offset": "0x24B7A",
+          "expected_hex": "7bf4",
+          "replacement_hex": "73f7",
+          "meaning": "MOVIZ curve slope high half for 0.46666666865348816"
+        },
+        {
+          "offset": "0x24B7E",
+          "expected_hex": "49f8",
+          "replacement_hex": "c9eb",
+          "meaning": "ADDF32 curve origin: -450.0 to -350.0 deci-C"
+        },
+        {
+          "offset": "0x24B80",
+          "expected_hex": "0ae84be1",
+          "replacement_hex": "0fe87b77",
+          "meaning": "MOVXI curve slope low half for 0.46666666865348816"
+        }
+      ],
+      "changed_offsets": [
+        "0x24A04",
+        "0x24A12",
+        "0x24B7A",
+        "0x24B7B",
+        "0x24B7E",
+        "0x24B7F",
+        "0x24B80",
+        "0x24B82",
+        "0x24B83"
+      ]
+    },
+    "fan35C_max55C_off32C": {
+      "start_c": 35,
+      "max_c": 55,
+      "stop_c": 32,
+      "curve_origin_c": 35,
+      "slope_f32": 0.3499999940395355,
+      "output_sha256": "938af6805f4ace42775e7faefbfcef4608f69725f39a20412e5f98894392ae2a",
+      "patches": [
+        {
+          "offset": "0x24A04",
+          "expected_hex": "c201",
+          "replacement_hex": "5e01",
+          "meaning": "CMP AR6: 450 to 350 deci-C"
+        },
+        {
+          "offset": "0x24A12",
+          "expected_hex": "a401",
+          "replacement_hex": "4001",
+          "meaning": "CMP AR6: 420 to 320 deci-C"
+        },
+        {
+          "offset": "0x24B7A",
+          "expected_hex": "7bf4",
+          "replacement_hex": "9bf5",
+          "meaning": "MOVIZ curve slope high half for 0.3499999940395355"
+        },
+        {
+          "offset": "0x24B7E",
+          "expected_hex": "49f8",
+          "replacement_hex": "c9eb",
+          "meaning": "ADDF32 curve origin: -450.0 to -350.0 deci-C"
+        },
+        {
+          "offset": "0x24B80",
+          "expected_hex": "0ae84be1",
+          "replacement_hex": "09e89b99",
+          "meaning": "MOVXI curve slope low half for 0.3499999940395355"
+        }
+      ],
+      "changed_offsets": [
+        "0x24A04",
+        "0x24A12",
+        "0x24B7A",
+        "0x24B7B",
+        "0x24B7E",
+        "0x24B7F",
+        "0x24B80",
+        "0x24B82",
+        "0x24B83"
+      ]
+    },
+    "fan35C_max60C_off32C": {
+      "start_c": 35,
+      "max_c": 60,
+      "stop_c": 32,
+      "curve_origin_c": 35,
+      "slope_f32": 0.2800000011920929,
       "output_sha256": "39b3c5cff7f6063e588f7e3f39ddba974e1c2a976df1a31dd239599d9ab35b1c",
       "patches": [
-        {"offset": "0x24A04", "expected_hex": "c201", "replacement_hex": "5e01", "meaning": "CMP AR6: 450 to 350 deci-C"},
-        {"offset": "0x24A12", "expected_hex": "a401", "replacement_hex": "4001", "meaning": "CMP AR6: 420 to 320 deci-C"},
-        {"offset": "0x24B7E", "expected_hex": "49f8", "replacement_hex": "c9eb", "meaning": "ADDF32 curve origin: -450.0 to -350.0 deci-C"}
+        {
+          "offset": "0x24A04",
+          "expected_hex": "c201",
+          "replacement_hex": "5e01",
+          "meaning": "CMP AR6: 450 to 350 deci-C"
+        },
+        {
+          "offset": "0x24A12",
+          "expected_hex": "a401",
+          "replacement_hex": "4001",
+          "meaning": "CMP AR6: 420 to 320 deci-C"
+        },
+        {
+          "offset": "0x24B7A",
+          "expected_hex": "7bf4",
+          "replacement_hex": "7bf4",
+          "meaning": "MOVIZ curve slope high half for 0.2800000011920929"
+        },
+        {
+          "offset": "0x24B7E",
+          "expected_hex": "49f8",
+          "replacement_hex": "c9eb",
+          "meaning": "ADDF32 curve origin: -450.0 to -350.0 deci-C"
+        },
+        {
+          "offset": "0x24B80",
+          "expected_hex": "0ae84be1",
+          "replacement_hex": "0ae84be1",
+          "meaning": "MOVXI curve slope low half for 0.2800000011920929"
+        }
       ],
-      "changed_offsets": ["0x24A04", "0x24A12", "0x24B7E", "0x24B7F"]
+      "changed_offsets": [
+        "0x24A04",
+        "0x24A12",
+        "0x24B7E",
+        "0x24B7F"
+      ]
     },
-    "fan40C_off37C": {
+    "fan35C_max65C_off32C": {
+      "start_c": 35,
+      "max_c": 65,
+      "stop_c": 32,
+      "curve_origin_c": 35,
+      "slope_f32": 0.23333333432674408,
+      "output_sha256": "6dcd6995a772e6a1a228e1c78e05f0a53d9c441f4e9ae517fe4f61930ee7778f",
+      "patches": [
+        {
+          "offset": "0x24A04",
+          "expected_hex": "c201",
+          "replacement_hex": "5e01",
+          "meaning": "CMP AR6: 450 to 350 deci-C"
+        },
+        {
+          "offset": "0x24A12",
+          "expected_hex": "a401",
+          "replacement_hex": "4001",
+          "meaning": "CMP AR6: 420 to 320 deci-C"
+        },
+        {
+          "offset": "0x24B7A",
+          "expected_hex": "7bf4",
+          "replacement_hex": "73f3",
+          "meaning": "MOVIZ curve slope high half for 0.23333333432674408"
+        },
+        {
+          "offset": "0x24B7E",
+          "expected_hex": "49f8",
+          "replacement_hex": "c9eb",
+          "meaning": "ADDF32 curve origin: -450.0 to -350.0 deci-C"
+        },
+        {
+          "offset": "0x24B80",
+          "expected_hex": "0ae84be1",
+          "replacement_hex": "0fe87b77",
+          "meaning": "MOVXI curve slope low half for 0.23333333432674408"
+        }
+      ],
+      "changed_offsets": [
+        "0x24A04",
+        "0x24A12",
+        "0x24B7A",
+        "0x24B7B",
+        "0x24B7E",
+        "0x24B7F",
+        "0x24B80",
+        "0x24B82",
+        "0x24B83"
+      ]
+    },
+    "fan35C_max70C_off32C": {
+      "start_c": 35,
+      "max_c": 70,
+      "stop_c": 32,
+      "curve_origin_c": 35,
+      "slope_f32": 0.20000000298023224,
+      "output_sha256": "78f775a5eb47cc4f6f98fa0af40c1805cf2b5d492637c30c28035f947a318de9",
+      "patches": [
+        {
+          "offset": "0x24A04",
+          "expected_hex": "c201",
+          "replacement_hex": "5e01",
+          "meaning": "CMP AR6: 450 to 350 deci-C"
+        },
+        {
+          "offset": "0x24A12",
+          "expected_hex": "a401",
+          "replacement_hex": "4001",
+          "meaning": "CMP AR6: 420 to 320 deci-C"
+        },
+        {
+          "offset": "0x24B7A",
+          "expected_hex": "7bf4",
+          "replacement_hex": "63f2",
+          "meaning": "MOVIZ curve slope high half for 0.20000000298023224"
+        },
+        {
+          "offset": "0x24B7E",
+          "expected_hex": "49f8",
+          "replacement_hex": "c9eb",
+          "meaning": "ADDF32 curve origin: -450.0 to -350.0 deci-C"
+        },
+        {
+          "offset": "0x24B80",
+          "expected_hex": "0ae84be1",
+          "replacement_hex": "0ee86b66",
+          "meaning": "MOVXI curve slope low half for 0.20000000298023224"
+        }
+      ],
+      "changed_offsets": [
+        "0x24A04",
+        "0x24A12",
+        "0x24B7A",
+        "0x24B7B",
+        "0x24B7E",
+        "0x24B7F",
+        "0x24B80",
+        "0x24B82",
+        "0x24B83"
+      ]
+    },
+    "fan40C_max50C_off37C": {
       "start_c": 40,
+      "max_c": 50,
       "stop_c": 37,
       "curve_origin_c": 40,
+      "slope_f32": 0.699999988079071,
+      "output_sha256": "a1c5e76caa0f210dc9a7c5d4152b9bff1d66fb495ae465ceb559a80c9672f842",
+      "patches": [
+        {
+          "offset": "0x24A04",
+          "expected_hex": "c201",
+          "replacement_hex": "9001",
+          "meaning": "CMP AR6: 450 to 400 deci-C"
+        },
+        {
+          "offset": "0x24A12",
+          "expected_hex": "a401",
+          "replacement_hex": "7201",
+          "meaning": "CMP AR6: 420 to 370 deci-C"
+        },
+        {
+          "offset": "0x24B7A",
+          "expected_hex": "7bf4",
+          "replacement_hex": "9bf9",
+          "meaning": "MOVIZ curve slope high half for 0.699999988079071"
+        },
+        {
+          "offset": "0x24B7E",
+          "expected_hex": "49f8",
+          "replacement_hex": "09f2",
+          "meaning": "ADDF32 curve origin: -450.0 to -400.0 deci-C"
+        },
+        {
+          "offset": "0x24B80",
+          "expected_hex": "0ae84be1",
+          "replacement_hex": "09e89b99",
+          "meaning": "MOVXI curve slope low half for 0.699999988079071"
+        }
+      ],
+      "changed_offsets": [
+        "0x24A04",
+        "0x24A12",
+        "0x24B7A",
+        "0x24B7B",
+        "0x24B7E",
+        "0x24B7F",
+        "0x24B80",
+        "0x24B82",
+        "0x24B83"
+      ]
+    },
+    "fan40C_max55C_off37C": {
+      "start_c": 40,
+      "max_c": 55,
+      "stop_c": 37,
+      "curve_origin_c": 40,
+      "slope_f32": 0.46666666865348816,
+      "output_sha256": "f99ec3f95d1c9b1d24307f47cb999e1665cdf6ace33be7a48813ff443a736f3c",
+      "patches": [
+        {
+          "offset": "0x24A04",
+          "expected_hex": "c201",
+          "replacement_hex": "9001",
+          "meaning": "CMP AR6: 450 to 400 deci-C"
+        },
+        {
+          "offset": "0x24A12",
+          "expected_hex": "a401",
+          "replacement_hex": "7201",
+          "meaning": "CMP AR6: 420 to 370 deci-C"
+        },
+        {
+          "offset": "0x24B7A",
+          "expected_hex": "7bf4",
+          "replacement_hex": "73f7",
+          "meaning": "MOVIZ curve slope high half for 0.46666666865348816"
+        },
+        {
+          "offset": "0x24B7E",
+          "expected_hex": "49f8",
+          "replacement_hex": "09f2",
+          "meaning": "ADDF32 curve origin: -450.0 to -400.0 deci-C"
+        },
+        {
+          "offset": "0x24B80",
+          "expected_hex": "0ae84be1",
+          "replacement_hex": "0fe87b77",
+          "meaning": "MOVXI curve slope low half for 0.46666666865348816"
+        }
+      ],
+      "changed_offsets": [
+        "0x24A04",
+        "0x24A12",
+        "0x24B7A",
+        "0x24B7B",
+        "0x24B7E",
+        "0x24B7F",
+        "0x24B80",
+        "0x24B82",
+        "0x24B83"
+      ]
+    },
+    "fan40C_max60C_off37C": {
+      "start_c": 40,
+      "max_c": 60,
+      "stop_c": 37,
+      "curve_origin_c": 40,
+      "slope_f32": 0.3499999940395355,
+      "output_sha256": "3d34e483da5645535e40ec6fb920fa6b231842bcd445b202fa4218da01bcb28a",
+      "patches": [
+        {
+          "offset": "0x24A04",
+          "expected_hex": "c201",
+          "replacement_hex": "9001",
+          "meaning": "CMP AR6: 450 to 400 deci-C"
+        },
+        {
+          "offset": "0x24A12",
+          "expected_hex": "a401",
+          "replacement_hex": "7201",
+          "meaning": "CMP AR6: 420 to 370 deci-C"
+        },
+        {
+          "offset": "0x24B7A",
+          "expected_hex": "7bf4",
+          "replacement_hex": "9bf5",
+          "meaning": "MOVIZ curve slope high half for 0.3499999940395355"
+        },
+        {
+          "offset": "0x24B7E",
+          "expected_hex": "49f8",
+          "replacement_hex": "09f2",
+          "meaning": "ADDF32 curve origin: -450.0 to -400.0 deci-C"
+        },
+        {
+          "offset": "0x24B80",
+          "expected_hex": "0ae84be1",
+          "replacement_hex": "09e89b99",
+          "meaning": "MOVXI curve slope low half for 0.3499999940395355"
+        }
+      ],
+      "changed_offsets": [
+        "0x24A04",
+        "0x24A12",
+        "0x24B7A",
+        "0x24B7B",
+        "0x24B7E",
+        "0x24B7F",
+        "0x24B80",
+        "0x24B82",
+        "0x24B83"
+      ]
+    },
+    "fan40C_max65C_off37C": {
+      "start_c": 40,
+      "max_c": 65,
+      "stop_c": 37,
+      "curve_origin_c": 40,
+      "slope_f32": 0.2800000011920929,
       "output_sha256": "97c527aa10bb4c1db72f1bb6d125e152b915d9f493cf9fdcf99828de85f7f2b4",
       "patches": [
-        {"offset": "0x24A04", "expected_hex": "c201", "replacement_hex": "9001", "meaning": "CMP AR6: 450 to 400 deci-C"},
-        {"offset": "0x24A12", "expected_hex": "a401", "replacement_hex": "7201", "meaning": "CMP AR6: 420 to 370 deci-C"},
-        {"offset": "0x24B7E", "expected_hex": "49f8", "replacement_hex": "09f2", "meaning": "ADDF32 curve origin: -450.0 to -400.0 deci-C"}
+        {
+          "offset": "0x24A04",
+          "expected_hex": "c201",
+          "replacement_hex": "9001",
+          "meaning": "CMP AR6: 450 to 400 deci-C"
+        },
+        {
+          "offset": "0x24A12",
+          "expected_hex": "a401",
+          "replacement_hex": "7201",
+          "meaning": "CMP AR6: 420 to 370 deci-C"
+        },
+        {
+          "offset": "0x24B7A",
+          "expected_hex": "7bf4",
+          "replacement_hex": "7bf4",
+          "meaning": "MOVIZ curve slope high half for 0.2800000011920929"
+        },
+        {
+          "offset": "0x24B7E",
+          "expected_hex": "49f8",
+          "replacement_hex": "09f2",
+          "meaning": "ADDF32 curve origin: -450.0 to -400.0 deci-C"
+        },
+        {
+          "offset": "0x24B80",
+          "expected_hex": "0ae84be1",
+          "replacement_hex": "0ae84be1",
+          "meaning": "MOVXI curve slope low half for 0.2800000011920929"
+        }
       ],
-      "changed_offsets": ["0x24A04", "0x24A12", "0x24B7E", "0x24B7F"]
+      "changed_offsets": [
+        "0x24A04",
+        "0x24A12",
+        "0x24B7E",
+        "0x24B7F"
+      ]
+    },
+    "fan40C_max70C_off37C": {
+      "start_c": 40,
+      "max_c": 70,
+      "stop_c": 37,
+      "curve_origin_c": 40,
+      "slope_f32": 0.23333333432674408,
+      "output_sha256": "c15048176b980fe21ad0145f5feca28ade41a4900a51976df65e38a14f0a49de",
+      "patches": [
+        {
+          "offset": "0x24A04",
+          "expected_hex": "c201",
+          "replacement_hex": "9001",
+          "meaning": "CMP AR6: 450 to 400 deci-C"
+        },
+        {
+          "offset": "0x24A12",
+          "expected_hex": "a401",
+          "replacement_hex": "7201",
+          "meaning": "CMP AR6: 420 to 370 deci-C"
+        },
+        {
+          "offset": "0x24B7A",
+          "expected_hex": "7bf4",
+          "replacement_hex": "73f3",
+          "meaning": "MOVIZ curve slope high half for 0.23333333432674408"
+        },
+        {
+          "offset": "0x24B7E",
+          "expected_hex": "49f8",
+          "replacement_hex": "09f2",
+          "meaning": "ADDF32 curve origin: -450.0 to -400.0 deci-C"
+        },
+        {
+          "offset": "0x24B80",
+          "expected_hex": "0ae84be1",
+          "replacement_hex": "0fe87b77",
+          "meaning": "MOVXI curve slope low half for 0.23333333432674408"
+        }
+      ],
+      "changed_offsets": [
+        "0x24A04",
+        "0x24A12",
+        "0x24B7A",
+        "0x24B7B",
+        "0x24B7E",
+        "0x24B7F",
+        "0x24B80",
+        "0x24B82",
+        "0x24B83"
+      ]
+    },
+    "fan45C_max55C_off42C": {
+      "start_c": 45,
+      "max_c": 55,
+      "stop_c": 42,
+      "curve_origin_c": 45,
+      "slope_f32": 0.699999988079071,
+      "output_sha256": "dbd6b970d787af2e22104f29c4c6421448fe80edf38394a866792d48a4ea901c",
+      "patches": [
+        {
+          "offset": "0x24A04",
+          "expected_hex": "c201",
+          "replacement_hex": "c201",
+          "meaning": "CMP AR6: 450 to 450 deci-C"
+        },
+        {
+          "offset": "0x24A12",
+          "expected_hex": "a401",
+          "replacement_hex": "a401",
+          "meaning": "CMP AR6: 420 to 420 deci-C"
+        },
+        {
+          "offset": "0x24B7A",
+          "expected_hex": "7bf4",
+          "replacement_hex": "9bf9",
+          "meaning": "MOVIZ curve slope high half for 0.699999988079071"
+        },
+        {
+          "offset": "0x24B7E",
+          "expected_hex": "49f8",
+          "replacement_hex": "49f8",
+          "meaning": "ADDF32 curve origin: -450.0 to -450.0 deci-C"
+        },
+        {
+          "offset": "0x24B80",
+          "expected_hex": "0ae84be1",
+          "replacement_hex": "09e89b99",
+          "meaning": "MOVXI curve slope low half for 0.699999988079071"
+        }
+      ],
+      "changed_offsets": [
+        "0x24B7A",
+        "0x24B7B",
+        "0x24B80",
+        "0x24B82",
+        "0x24B83"
+      ]
+    },
+    "fan45C_max60C_off42C": {
+      "start_c": 45,
+      "max_c": 60,
+      "stop_c": 42,
+      "curve_origin_c": 45,
+      "slope_f32": 0.46666666865348816,
+      "output_sha256": "a3ca7b489d9102afdd2d732db9240baeeda1e2ff3051dc5874ad3e7735eae495",
+      "patches": [
+        {
+          "offset": "0x24A04",
+          "expected_hex": "c201",
+          "replacement_hex": "c201",
+          "meaning": "CMP AR6: 450 to 450 deci-C"
+        },
+        {
+          "offset": "0x24A12",
+          "expected_hex": "a401",
+          "replacement_hex": "a401",
+          "meaning": "CMP AR6: 420 to 420 deci-C"
+        },
+        {
+          "offset": "0x24B7A",
+          "expected_hex": "7bf4",
+          "replacement_hex": "73f7",
+          "meaning": "MOVIZ curve slope high half for 0.46666666865348816"
+        },
+        {
+          "offset": "0x24B7E",
+          "expected_hex": "49f8",
+          "replacement_hex": "49f8",
+          "meaning": "ADDF32 curve origin: -450.0 to -450.0 deci-C"
+        },
+        {
+          "offset": "0x24B80",
+          "expected_hex": "0ae84be1",
+          "replacement_hex": "0fe87b77",
+          "meaning": "MOVXI curve slope low half for 0.46666666865348816"
+        }
+      ],
+      "changed_offsets": [
+        "0x24B7A",
+        "0x24B7B",
+        "0x24B80",
+        "0x24B82",
+        "0x24B83"
+      ]
+    },
+    "fan45C_max65C_off42C": {
+      "start_c": 45,
+      "max_c": 65,
+      "stop_c": 42,
+      "curve_origin_c": 45,
+      "slope_f32": 0.3499999940395355,
+      "output_sha256": "f19242654c692336836f8b1b67514e941948f921fce085f7b0670a200acf020b",
+      "patches": [
+        {
+          "offset": "0x24A04",
+          "expected_hex": "c201",
+          "replacement_hex": "c201",
+          "meaning": "CMP AR6: 450 to 450 deci-C"
+        },
+        {
+          "offset": "0x24A12",
+          "expected_hex": "a401",
+          "replacement_hex": "a401",
+          "meaning": "CMP AR6: 420 to 420 deci-C"
+        },
+        {
+          "offset": "0x24B7A",
+          "expected_hex": "7bf4",
+          "replacement_hex": "9bf5",
+          "meaning": "MOVIZ curve slope high half for 0.3499999940395355"
+        },
+        {
+          "offset": "0x24B7E",
+          "expected_hex": "49f8",
+          "replacement_hex": "49f8",
+          "meaning": "ADDF32 curve origin: -450.0 to -450.0 deci-C"
+        },
+        {
+          "offset": "0x24B80",
+          "expected_hex": "0ae84be1",
+          "replacement_hex": "09e89b99",
+          "meaning": "MOVXI curve slope low half for 0.3499999940395355"
+        }
+      ],
+      "changed_offsets": [
+        "0x24B7A",
+        "0x24B7B",
+        "0x24B80",
+        "0x24B82",
+        "0x24B83"
+      ]
+    },
+    "fan45C_max70C_off42C": {
+      "start_c": 45,
+      "max_c": 70,
+      "stop_c": 42,
+      "curve_origin_c": 45,
+      "slope_f32": 0.2800000011920929,
+      "output_sha256": "d4b4f4590689ae2effedf40e3999da8d4b9dfdcac7a1eff4635d0eca6d644600",
+      "patches": [
+        {
+          "offset": "0x24A04",
+          "expected_hex": "c201",
+          "replacement_hex": "c201",
+          "meaning": "CMP AR6: 450 to 450 deci-C"
+        },
+        {
+          "offset": "0x24A12",
+          "expected_hex": "a401",
+          "replacement_hex": "a401",
+          "meaning": "CMP AR6: 420 to 420 deci-C"
+        },
+        {
+          "offset": "0x24B7A",
+          "expected_hex": "7bf4",
+          "replacement_hex": "7bf4",
+          "meaning": "MOVIZ curve slope high half for 0.2800000011920929"
+        },
+        {
+          "offset": "0x24B7E",
+          "expected_hex": "49f8",
+          "replacement_hex": "49f8",
+          "meaning": "ADDF32 curve origin: -450.0 to -450.0 deci-C"
+        },
+        {
+          "offset": "0x24B80",
+          "expected_hex": "0ae84be1",
+          "replacement_hex": "0ae84be1",
+          "meaning": "MOVXI curve slope low half for 0.2800000011920929"
+        }
+      ],
+      "changed_offsets": []
     }
   }
 }

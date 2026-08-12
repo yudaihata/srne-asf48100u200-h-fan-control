@@ -40,10 +40,14 @@ control, and MPPT logic untouched.
 |---:|---:|---|
 | `0x24A04` | `c2 01` | `CMP AR6,#450`, start threshold in deci-°C |
 | `0x24A12` | `a4 01` | `CMP AR6,#420`, stop threshold in deci-°C |
+| `0x24B7A` | `7b f4` | high half of the stock 0.28 temperature-curve slope |
 | `0x24B7E` | `49 f8` | `ADDF32` temperature-curve origin, −450.0 |
+| `0x24B80` | `0a e8 4b e1` | `MOVXI` low half of the stock 0.28 slope |
 
-For both documented profiles, only four bytes differ from stock:
-`0x24A04`, `0x24A12`, `0x24B7E`, and `0x24B7F`.
+Each reviewed profile changes between zero and nine bytes. The 35/60/32 °C and
+40/65/37 °C profiles retain the stock 0.28 slope and therefore still change
+only `0x24A04`, `0x24A12`, `0x24B7E`, and `0x24B7F`. The 45/70/42 °C profile
+is byte-for-byte identical to stock.
 
 ## Instruction-encoding verification
 
@@ -66,17 +70,46 @@ ADDF32 R1H,#-350.0,R1H
 CMP AR6,#400
 CMP AR6,#370
 ADDF32 R1H,#-400.0,R1H
+
+MOVIZ/MOVXI R3H: 0.2
+MOVIZ/MOVXI R3H: 0.233333334
+MOVIZ/MOVXI R3H: 0.28
+MOVIZ/MOVXI R3H: 0.35
+MOVIZ/MOVXI R3H: 0.466666669
+MOVIZ/MOVXI R3H: 0.7
 ```
+
+These are the six unique binary32 slopes required by the 14 allowed
+start/maximum combinations. The requested curve is normalized as:
+
+```text
+request = 30 + (temperature_deci_c - start_c * 10) * slope
+slope   = 70 / ((max_c - start_c) * 10)
+```
+
+The minimum allowed start-to-maximum span is 10 °C. The excluded 45/50 °C
+combination would require the separately assembled 1.4 slope but is not present
+in the public manifest.
+
+The advanced CLI can construct an unreviewed integer-C profile outside this
+manifest. It encodes the two `CMP` immediates, the complete `ADDF32` curve
+origin, and the `MOVIZ`/`MOVXI` binary32 slope, then verifies the candidate by
+exact source diff. Independent assembly samples for −10.0, −380.0, and −500.0
+are included in `analysis/verify_fan_patch.asm` to cover the custom origin
+encoder across its documented range. This encoding verification does not make
+a custom thermal profile reviewed or safe.
 
 ## Candidate identities
 
 | Profile | Candidate SHA-256 |
 |---|---|
-| `fan35C_off32C` | `39b3c5cff7f6063e588f7e3f39ddba974e1c2a976df1a31dd239599d9ab35b1c` |
-| `fan40C_off37C` | `97c527aa10bb4c1db72f1bb6d125e152b915d9f493cf9fdcf99828de85f7f2b4` |
+| `fan35C_max60C_off32C` | `39b3c5cff7f6063e588f7e3f39ddba974e1c2a976df1a31dd239599d9ab35b1c` |
+| `fan40C_max65C_off37C` | `97c527aa10bb4c1db72f1bb6d125e152b915d9f493cf9fdcf99828de85f7f2b4` |
+| `fan45C_max70C_off42C` | `d4b4f4590689ae2effedf40e3999da8d4b9dfdcac7a1eff4635d0eca6d644600` (stock-equivalent) |
 
-Both candidates retain the 475,136-byte size and trailer marker
-`23016745ab89efcddcfe98ba00000000`.
+All 14 candidate identities and exact changed-offset sets are recorded in
+[`profiles/profiles.json`](../profiles/profiles.json). Every candidate retains
+the 475,136-byte size and trailer marker `23016745ab89efcddcfe98ba00000000`.
 
 ## Confidence boundary
 

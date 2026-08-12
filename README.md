@@ -12,13 +12,18 @@ the SRNE `ASF48100U200-H` / firmware image labeled
 `ASF48100SU200_V8.16.9.bin`.
 
 The stock image was found to use a temperature gate around 45 °C on / 42 °C
-off in addition to load, charge, and discharge demands. Two minimal-difference
-profiles are documented:
+off in addition to load, charge, and discharge demands. Fourteen statically
+reviewed combinations are available:
 
-| Profile | Start | Stop | Curve origin | Intended use |
-|---|---:|---:|---:|---|
-| `fan40C_off37C` | 40 °C | 37 °C | 40 °C | 5 °C below stock; increased fan runtime/noise possible |
-| `fan35C_off32C` | 35 °C | 32 °C | 35 °C | Larger temperature reduction; more fan runtime/noise/wear possible |
+- fan start: 35, 40, or 45 °C;
+- fan maximum: 50, 55, 60, 65, or 70 °C;
+- fan stop: start minus 3 °C;
+- minimum start-to-maximum span: 10 °C.
+
+"Fan maximum" is the temperature at which the temperature-derived fan request
+reaches approximately 100%. It is not an over-temperature protection setting.
+The stock-equivalent combination is 45/70/42 °C. Lower settings can increase
+fan runtime, noise, dust intake, and wear.
 
 No vendor firmware or patched firmware is distributed. The builder refuses to
 operate unless the user supplies the exact known source image and all hash,
@@ -32,21 +37,53 @@ The selected BIN never leaves the browser. The page validates the exact source
 SHA-256, size, trailer, original instruction bytes, changed offsets, and final
 candidate SHA-256 before enabling download.
 
-## Quick start
+## Quick start: manual CLI
 
 Requires Python 3.11 or later.
+
+Use a pre-reviewed profile when possible:
 
 ```bash
 python3 tools/build_candidate.py \
   --source /path/to/ASF48100SU200_V8.16.9.bin \
-  --profile fan40C_off37C \
-  --output /path/to/ASF48100SU200_V8.16.9_fan40C_off37C.bin
+  --profile fan40C_max65C_off37C \
+  --output /path/to/ASF48100SU200_V8.16.9_fan40C_max65C_off37C.bin
 
 python3 tools/verify_candidate.py \
-  --candidate /path/to/ASF48100SU200_V8.16.9_fan40C_off37C.bin \
-  --profile fan40C_off37C \
+  --candidate /path/to/ASF48100SU200_V8.16.9_fan40C_max65C_off37C.bin \
+  --profile fan40C_max65C_off37C \
   --source /path/to/ASF48100SU200_V8.16.9.bin
 ```
+
+The former names `fan35C_off32C` and `fan40C_off37C` remain accepted as aliases
+for the unchanged 35/60/32 °C and 40/65/37 °C candidates.
+
+Advanced users can specify integer-C temperatures outside the browser's
+reviewed 14-combination allowlist. Stop defaults to start minus 3 °C when
+omitted:
+
+```bash
+python3 tools/build_candidate.py \
+  --source /path/to/ASF48100SU200_V8.16.9.bin \
+  --start-c 38 --max-c 58 --stop-c 35 \
+  --acknowledge-unreviewed \
+  --output /path/to/ASF48100SU200_V8.16.9_custom_38_58_35.bin
+
+python3 tools/verify_candidate.py \
+  --candidate /path/to/ASF48100SU200_V8.16.9_custom_38_58_35.bin \
+  --source /path/to/ASF48100SU200_V8.16.9.bin \
+  --start-c 38 --max-c 58 --stop-c 35 \
+  --acknowledge-unreviewed
+```
+
+Custom mode requires `1 <= start <= 50 °C`, `start < max <= 100 °C`, and
+`0 <= stop < start °C`. The start limit keeps every integer-C curve origin
+exactly representable by the C28x immediate encoding. It intentionally does not enforce the browser's 10 °C
+minimum span. These candidates have no pre-reviewed output hash or runtime
+validation; the tools instead derive the C28x instructions, report the exact
+changed bytes and candidate hash, and require the same settings plus pristine
+source for verification. The acknowledgement flag prevents accidental use of
+this advanced path.
 
 The expected source SHA-256 is
 `d4b4f4590689ae2effedf40e3999da8d4b9dfdcac7a1eff4635d0eca6d644600`.

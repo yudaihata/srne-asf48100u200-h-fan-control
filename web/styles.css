@@ -7,7 +7,7 @@
 
 * { box-sizing: border-box; }
 body { min-width: 320px; margin: 0; line-height: 1.55; }
-button, input { font: inherit; }
+button, input, select { font: inherit; }
 a { color: #075f44; }
 code { overflow-wrap: anywhere; font-size: .82rem; }
 
@@ -38,6 +38,11 @@ legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: re
 .profile-option input { margin-top: 5px; }
 .profile-option span { display: flex; flex-direction: column; gap: 3px; }
 .profile-option small { color: #666; line-height: 1.45; }
+
+.temperature-settings { display: grid; grid-template-columns: minmax(130px, 1fr) minmax(160px, 1.4fr); gap: 12px 16px; align-items: center; padding: 16px 0; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
+.temperature-settings select { width: 100%; padding: 8px; border: 1px solid #888; background: #fff; }
+.temperature-settings output { font-weight: 700; }
+.temperature-note { margin-top: 10px; }
 
 .agreement { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; font-size: .88rem; }
 .agreement input { margin-top: 5px; }
@@ -71,5 +76,6 @@ footer p { margin: 8px 0 0; }
 
 @media (max-width: 480px) {
   header { padding-top: 30px; }
+  .temperature-settings { grid-template-columns: 1fr; }
   .result dd button { margin: 8px 0 0; }
 }

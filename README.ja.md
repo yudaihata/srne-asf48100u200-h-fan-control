@@ -12,13 +12,17 @@ SRNE `ASF48100U200-H` のファームウェア
 検証・候補生成・実機ログ分析ツールとしてまとめたリポジトリです。
 
 標準ファームウェアでは、負荷・充電・放電要求に加えて、およそ45℃で開始、
-42℃で停止する温度条件が使われていました。以下の最小差分プロファイルを
-収録しています。
+42℃で停止する温度条件が使われていました。静的検証済みの14通りから選択
+できます。
 
-| プロファイル | 開始 | 停止 | カーブ原点 | 想定用途 |
-|---|---:|---:|---:|---|
-| `fan40C_off37C` | 40℃ | 37℃ | 40℃ | 標準より5℃低い設定。ファン稼働・騒音が増える可能性あり |
-| `fan35C_off32C` | 35℃ | 32℃ | 35℃ | 温度低下が大きい一方、ファン稼働・騒音・摩耗も増える可能性あり |
+- ファン開始温度：35、40、45℃
+- ファン最大温度：50、55、60、65、70℃
+- ファン停止温度：開始温度−3℃
+- 開始温度から最大温度までの最小幅：10℃
+
+「ファン最大温度」は温度由来のファン要求が約100%に達する温度であり、
+過熱保護温度ではありません。45/70/42℃は純正相当です。低い設定ほど、
+ファン稼働時間、騒音、吸塵、摩耗が増える可能性があります。
 
 純正BINおよび改変済みBINは配布しません。生成ツールは、利用者が用意した
 原本についてSHA-256、サイズ、末尾マーカー、変更前バイトを検証し、すべて
@@ -32,21 +36,51 @@ SRNE `ASF48100U200-H` のファームウェア
 サイズ、末尾マーカー、変更前命令、変更オフセット、生成後SHA-256がすべて
 一致した場合だけ候補BINをダウンロードできます。
 
-## 使用例
+## Quick start：手動CLI
 
 Python 3.11以降を使用します。
+
+可能な場合は、事前検証済みプロファイルを指定します。
 
 ```bash
 python3 tools/build_candidate.py \
   --source /path/to/ASF48100SU200_V8.16.9.bin \
-  --profile fan40C_off37C \
-  --output /path/to/ASF48100SU200_V8.16.9_fan40C_off37C.bin
+  --profile fan40C_max65C_off37C \
+  --output /path/to/ASF48100SU200_V8.16.9_fan40C_max65C_off37C.bin
 
 python3 tools/verify_candidate.py \
-  --candidate /path/to/ASF48100SU200_V8.16.9_fan40C_off37C.bin \
-  --profile fan40C_off37C \
+  --candidate /path/to/ASF48100SU200_V8.16.9_fan40C_max65C_off37C.bin \
+  --profile fan40C_max65C_off37C \
   --source /path/to/ASF48100SU200_V8.16.9.bin
 ```
+
+従来名の`fan35C_off32C`と`fan40C_off37C`も、それぞれ同一内容の
+35/60/32℃候補と40/65/37℃候補への別名として引き続き利用できます。
+
+技術的に詳しい利用者は、Browser Patcherの14通りに含まれない整数℃の温度も
+指定できます。`--stop-c`を省略した場合は開始温度−3℃になります。
+
+```bash
+python3 tools/build_candidate.py \
+  --source /path/to/ASF48100SU200_V8.16.9.bin \
+  --start-c 38 --max-c 58 --stop-c 35 \
+  --acknowledge-unreviewed \
+  --output /path/to/ASF48100SU200_V8.16.9_custom_38_58_35.bin
+
+python3 tools/verify_candidate.py \
+  --candidate /path/to/ASF48100SU200_V8.16.9_custom_38_58_35.bin \
+  --source /path/to/ASF48100SU200_V8.16.9.bin \
+  --start-c 38 --max-c 58 --stop-c 35 \
+  --acknowledge-unreviewed
+```
+
+カスタムモードの範囲は`1 <= 開始 <= 50℃`、`開始 < 最大 <= 100℃`、
+`0 <= 停止 < 開始℃`です。開始温度の上限は、すべての整数℃のカーブ原点を
+C28x即値で正確に表現するためのものです。Browser Patcherの最小温度幅10℃は意図的に適用
+しません。カスタム候補には事前検証済みの出力ハッシュや実機検証結果は
+ありません。ツールはC28x命令を生成して正確な変更バイトと候補ハッシュを
+表示し、検証時には同じ温度指定と原本BINを要求します。上級者向け経路の
+誤使用を避けるため、確認フラグを必須にしています。
 
 対象原本のSHA-256は
 `d4b4f4590689ae2effedf40e3999da8d4b9dfdcac7a1eff4635d0eca6d644600`
