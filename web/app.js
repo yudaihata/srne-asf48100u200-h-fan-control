@@ -1,5 +1,6 @@
 import {
   PatcherError,
+  buildProvenance,
   buildCandidate,
   inspectSource,
   outputFileName,
@@ -28,8 +29,11 @@ const ui = {
   resultProfile: document.querySelector("#result-profile"),
   resultHash: document.querySelector("#result-hash"),
   resultOffsets: document.querySelector("#result-offsets"),
+  resultEvidence: document.querySelector("#result-evidence"),
   download: document.querySelector("#download-link"),
+  provenanceDownload: document.querySelector("#provenance-download-link"),
   copyHash: document.querySelector("#copy-hash"),
+  buildVersion: document.querySelector("#build-version"),
 };
 
 const errorMessages = {
@@ -45,10 +49,12 @@ const errorMessages = {
 };
 
 let manifest;
+let buildInfo = {};
 let sourceBytes;
-let sourceFile;
 let sourceValid = false;
 let downloadUrl;
+let provenanceUrl;
+let loadSequence = 0;
 
 function selectedProfile() {
   if (!manifest) return undefined;
@@ -96,8 +102,11 @@ function setStatus(kind, title, detail) {
 function resetResult() {
   ui.result.hidden = true;
   if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+  if (provenanceUrl) URL.revokeObjectURL(provenanceUrl);
   downloadUrl = undefined;
+  provenanceUrl = undefined;
   ui.download.removeAttribute("href");
+  ui.provenanceDownload.removeAttribute("href");
 }
 
 function updateButton() {
@@ -113,10 +122,10 @@ function showError(error) {
 }
 
 async function loadFile(file) {
+  const sequence = ++loadSequence;
   resetResult();
   sourceValid = false;
   sourceBytes = undefined;
-  sourceFile = file;
   updateButton();
 
   if (!file) {
@@ -134,12 +143,15 @@ async function loadFile(file) {
   setStatus("working", "原本を照合しています", "SHA-256、サイズ、末尾マーカーを確認中です。");
 
   try {
-    sourceBytes = new Uint8Array(await file.arrayBuffer());
-    const result = await inspectSource(sourceBytes, manifest);
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    const result = await inspectSource(bytes, manifest);
+    if (sequence !== loadSequence) return;
+    sourceBytes = bytes;
     ui.sourceHash.textContent = result.sha256;
     sourceValid = true;
     setStatus("success", "V8.16.9原本を確認しました", "すべての原本チェックに合格しました。冷却設定を確認してください。");
   } catch (error) {
+    if (sequence !== loadSequence) return;
     ui.sourceHash.textContent = "不一致";
     showError(error);
   }
@@ -157,7 +169,12 @@ async function build() {
     const result = await buildCandidate(sourceBytes, manifest, profile);
     const name = outputFileName(profile);
     const profileDefinition = manifest.profiles[profile];
+    const provenance = buildProvenance(manifest, profile, result, buildInfo);
     downloadUrl = URL.createObjectURL(new Blob([result.bytes], { type: "application/octet-stream" }));
+    provenanceUrl = URL.createObjectURL(new Blob(
+      [`${JSON.stringify(provenance, null, 2)}\n`],
+      { type: "application/json" },
+    ));
     ui.download.href = downloadUrl;
     ui.download.download = name;
     ui.resultProfile.textContent = profileLabel(profileDefinition);
@@ -165,6 +182,11 @@ async function build() {
     ui.resultOffsets.textContent = result.changedOffsets.length
       ? result.changedOffsets.map((value) => `0x${value.toString(16).toUpperCase()}`).join(", ")
       : "変更なし（純正設定と同一）";
+    ui.resultEvidence.textContent = profileDefinition.evidence.runtime === "runtime-observed"
+      ? "静的確認済み・実機観測あり（条件と限界は実機検証資料を参照）"
+      : "静的確認済み・この設定の実機動作は未確認";
+    ui.provenanceDownload.href = provenanceUrl;
+    ui.provenanceDownload.download = `${name}.provenance.json`;
     ui.result.hidden = false;
     setStatus("success", "候補BINの検証が完了しました", "元ファイルは変更されていません。下のボタンから候補BINを保存できます。");
     ui.result.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -180,9 +202,13 @@ ui.startTemperature.addEventListener("change", updateTemperatureSettings);
 ui.maxTemperature.addEventListener("change", updateTemperatureSettings);
 ui.buildButton.addEventListener("click", build);
 ui.copyHash.addEventListener("click", async () => {
-  await navigator.clipboard.writeText(ui.resultHash.textContent);
-  ui.copyHash.textContent = "コピー済み";
-  setTimeout(() => { ui.copyHash.textContent = "SHA-256をコピー"; }, 1600);
+  try {
+    await navigator.clipboard.writeText(ui.resultHash.textContent);
+    ui.copyHash.textContent = "コピー済み";
+    setTimeout(() => { ui.copyHash.textContent = "SHA-256をコピー"; }, 1600);
+  } catch (error) {
+    showError(error);
+  }
 });
 
 for (const eventName of ["dragenter", "dragover"]) {
@@ -200,9 +226,14 @@ for (const eventName of ["dragleave", "drop"]) {
 ui.dropZone.addEventListener("drop", (event) => loadFile(event.dataTransfer?.files?.[0]));
 
 try {
-  const response = await fetch("./profiles.json", { cache: "no-store" });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  manifest = validateManifest(await response.json());
+  const [manifestResponse, buildResponse] = await Promise.all([
+    fetch("./profiles.json", { cache: "no-store" }),
+    fetch("./build-info.json", { cache: "no-store" }),
+  ]);
+  if (!manifestResponse.ok) throw new Error(`HTTP ${manifestResponse.status}`);
+  manifest = validateManifest(await manifestResponse.json());
+  if (buildResponse.ok) buildInfo = await buildResponse.json();
+  ui.buildVersion.textContent = `Build: ${(buildInfo.commit ?? "unknown").slice(0, 12)}`;
   updateTemperatureSettings();
 } catch (error) {
   showError(new PatcherError("MANIFEST", error.message));

@@ -5,12 +5,19 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import struct
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "profiles" / "profiles.json"
+SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+EVIDENCE_VALUES = {
+    "static_encoding": {"confirmed-static"},
+    "candidate_identity": {"confirmed-static", "stock-equivalent"},
+    "runtime": {"runtime-observed", "not-established"},
+}
 
 
 class VerificationError(ValueError):
@@ -22,7 +29,88 @@ def sha256(data: bytes) -> str:
 
 
 def load_manifest(path: Path = MANIFEST) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    validate_manifest(manifest)
+    return manifest
+
+
+def _require_sha256(value: object, label: str) -> None:
+    if not isinstance(value, str) or not SHA256_RE.fullmatch(value):
+        raise VerificationError(f"Invalid SHA-256 for {label}")
+
+
+def validate_manifest(manifest: dict[str, Any]) -> None:
+    """Validate all safety-relevant manifest structure and patch invariants."""
+    if manifest.get("format_version") != 2:
+        raise VerificationError("Unsupported manifest format_version")
+    source = manifest.get("source")
+    constraints = manifest.get("constraints")
+    profiles = manifest.get("profiles")
+    if not isinstance(source, dict) or not isinstance(constraints, dict) or not isinstance(profiles, dict):
+        raise VerificationError("Manifest is missing source, constraints, or profiles")
+    _require_sha256(source.get("sha256"), "source")
+    if not isinstance(source.get("size"), int) or source["size"] <= 0:
+        raise VerificationError("Invalid source size")
+    try:
+        trailer = bytes.fromhex(source["trailer_hex"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise VerificationError("Invalid source trailer") from exc
+    if not trailer or len(trailer) > source["size"]:
+        raise VerificationError("Invalid source trailer length")
+
+    expected_names = {
+        f"fan{start}C_max{maximum}C_off{start - constraints['stop_delta_c']}C"
+        for start in constraints["allowed_start_c"]
+        for maximum in constraints["allowed_max_c"]
+        if maximum - start >= constraints["minimum_span_c"]
+    }
+    if set(profiles) != expected_names:
+        raise VerificationError("Reviewed profile set does not match constraints")
+
+    for name, profile in profiles.items():
+        _require_sha256(profile.get("output_sha256"), name)
+        if profile.get("stop_c") != profile.get("start_c") - constraints["stop_delta_c"]:
+            raise VerificationError(f"Invalid hysteresis for {name}")
+        if profile.get("max_c") - profile.get("start_c") < constraints["minimum_span_c"]:
+            raise VerificationError(f"Invalid temperature span for {name}")
+        evidence = profile.get("evidence")
+        if not isinstance(evidence, dict):
+            raise VerificationError(f"Missing evidence metadata for {name}")
+        for key, allowed in EVIDENCE_VALUES.items():
+            if evidence.get(key) not in allowed:
+                raise VerificationError(f"Invalid {key} evidence for {name}")
+        if evidence["runtime"] == "runtime-observed" and not evidence.get("runtime_document"):
+            raise VerificationError(f"Missing runtime evidence document for {name}")
+
+        covered: set[int] = set()
+        computed_changed: list[int] = []
+        for patch in profile.get("patches", []):
+            try:
+                offset = int(patch["offset"], 0)
+                expected = bytes.fromhex(patch["expected_hex"])
+                replacement = bytes.fromhex(patch["replacement_hex"])
+            except (KeyError, TypeError, ValueError) as exc:
+                raise VerificationError(f"Invalid patch encoding in {name}") from exc
+            if not expected or len(expected) != len(replacement):
+                raise VerificationError(f"Patch length mismatch in {name} at {offset:#x}")
+            if offset < 0 or offset + len(expected) > source["size"]:
+                raise VerificationError(f"Patch outside source in {name} at {offset:#x}")
+            positions = set(range(offset, offset + len(expected)))
+            if covered & positions:
+                raise VerificationError(f"Overlapping patches in {name} at {offset:#x}")
+            covered |= positions
+            computed_changed.extend(
+                offset + index
+                for index, (before, after) in enumerate(zip(expected, replacement))
+                if before != after
+            )
+        declared = [int(value, 0) for value in profile.get("changed_offsets", [])]
+        if declared != sorted(computed_changed):
+            raise VerificationError(f"Invalid changed_offsets for {name}")
+
+    aliases = manifest.get("profile_aliases", {})
+    if not isinstance(aliases, dict) or any(target not in profiles for target in aliases.values()):
+        raise VerificationError("Invalid profile aliases")
 
 
 def resolve_profile(name: str, manifest: dict[str, Any]) -> dict[str, Any]:
@@ -72,6 +160,8 @@ def build_custom_profile(start_c: int, max_c: int, stop_c: int) -> dict[str, Any
         )
     if not 0 <= stop_c < start_c:
         raise VerificationError("Custom stop temperature must satisfy 0 <= stop < start C")
+    if max_c - start_c < 10:
+        raise VerificationError("Custom start-to-maximum span must be at least 10 C")
 
     start_deci_c = start_c * 10
     stop_deci_c = stop_c * 10

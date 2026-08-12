@@ -88,10 +88,12 @@
           <p>元のBINは変更されていません。</p>
           <dl>
             <div><dt>冷却設定</dt><dd id="result-profile"></dd></div>
+            <div><dt>証拠レベル</dt><dd id="result-evidence"></dd></div>
             <div><dt>変更オフセット</dt><dd><code id="result-offsets"></code></dd></div>
             <div><dt>候補SHA-256</dt><dd><code id="result-hash"></code><button id="copy-hash" type="button">コピー</button></dd></div>
           </dl>
           <a id="download-link" class="primary-button" download>候補BINをダウンロード</a>
+          <a id="provenance-download-link" download>検証記録（JSON）をダウンロード</a>
         </section>
       </section>
 
@@ -104,6 +106,7 @@
 
     <footer>
       <a href="https://github.com/yudaihata/srne-asf48100u200-h-fan-control">GitHubリポジトリ</a>
+      <p id="build-version">Build: 読み込み中</p>
       <p>Unofficial independent research. Not affiliated with or endorsed by SRNE Solar Co., Ltd.</p>
     </footer>
     <script type="module" src="./app.js"></script>

@@ -41,9 +41,10 @@ SRNE `ASF48100U200-H` のファームウェア
 CLIはオフライン利用、自動化、独立した再現性検証、上級者向けカスタム解析を
 目的としています。Python 3.11以降を使用します。
 
-### 事前検証済みプロファイル
+### 静的確認済みプロファイル
 
-Browser Patcherと同じ事前検証済み候補を生成します。
+Browser Patcherと同じ静的確認済み候補を生成します。生成時には、原本・候補
+SHA-256、変更オフセット、証拠レベルを記録したprovenance JSONも出力します。
 
 ```bash
 python3 tools/build_candidate.py \
@@ -87,7 +88,7 @@ python3 tools/verify_candidate.py \
 カスタムモードの範囲は`1 <= 開始 <= 50℃`、`開始 < 最大 <= 100℃`、
 `0 <= 停止 < 開始℃`です。開始温度の上限は、すべての整数℃のカーブ原点を
 C28x即値で正確に表現するためのものです。Browser Patcherの最小温度幅10℃は
-意図的に適用しません。カスタム候補には事前検証済みの出力ハッシュや
+カスタムモードにも適用します。カスタム候補には事前検証済みの出力ハッシュや
 実機検証結果はありません。ツールはC28x命令を生成して正確な変更バイトと候補ハッシュを
 表示し、検証時には同じ温度指定と原本BINを要求します。上級者向け経路の
 誤使用を避けるため、確認フラグを必須にしています。
@@ -108,6 +109,9 @@ C28x即値で正確に表現するためのものです。Browser Patcherの最�
   比較方法と冷却効果
 - [`docs/safety.md`](docs/safety.md)：書き込み前の確認事項と未解決リスク
 - [`profiles/profiles.json`](profiles/profiles.json)：機械可読な差分定義
+- [`spec/`](spec/)：マニフェストを生成する正規の簡潔な仕様
+- [`docs/evidence-levels.md`](docs/evidence-levels.md)：静的確認と実機観測の区別
+- [`docs/release-process.md`](docs/release-process.md)：公開前の再現検証手順
 - [`tools/`](tools/)：候補生成、検証、HAログ比較ツール
 
 ## 重要な注意

@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://yudaihata.github.io/srne-asf48100u200-h-fan-control/profile-schema-v2.json",
+  "title": "SRNE fan-control reviewed profile manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format_version", "generated_from", "source", "constraints", "profile_aliases", "profiles"],
+  "properties": {
+    "format_version": { "const": 2 },
+    "generated_from": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 2
+    },
+    "source": {
+      "type": "object",
+      "required": ["label", "product_model", "firmware_label", "sha256", "size", "trailer_hex", "c28x_word_base", "tested_hardware_revision", "tested_updater"],
+      "properties": {
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "size": { "type": "integer", "minimum": 1 },
+        "trailer_hex": { "$ref": "#/$defs/hex" }
+      },
+      "additionalProperties": true
+    },
+    "constraints": { "type": "object" },
+    "profile_aliases": { "type": "object", "additionalProperties": { "type": "string" } },
+    "profiles": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/profile" }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "hex": { "type": "string", "pattern": "^(?:[0-9a-fA-F]{2})+$" },
+    "patch": {
+      "type": "object",
+      "required": ["offset", "expected_hex", "replacement_hex", "meaning"],
+      "properties": {
+        "offset": { "type": "string", "pattern": "^0x[0-9A-Fa-f]+$" },
+        "expected_hex": { "$ref": "#/$defs/hex" },
+        "replacement_hex": { "$ref": "#/$defs/hex" },
+        "meaning": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["static_encoding", "candidate_identity", "runtime", "runtime_document"],
+      "properties": {
+        "static_encoding": { "const": "confirmed-static" },
+        "candidate_identity": { "enum": ["confirmed-static", "stock-equivalent"] },
+        "runtime": { "enum": ["runtime-observed", "not-established"] },
+        "runtime_document": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "profile": {
+      "type": "object",
+      "required": ["start_c", "max_c", "stop_c", "curve_origin_c", "slope_f32", "patches", "changed_offsets", "output_sha256", "evidence"],
+      "properties": {
+        "start_c": { "type": "integer" },
+        "max_c": { "type": "integer" },
+        "stop_c": { "type": "integer" },
+        "curve_origin_c": { "type": "integer" },
+        "slope_f32": { "type": "number" },
+        "patches": { "type": "array", "items": { "$ref": "#/$defs/patch" }, "minItems": 1 },
+        "changed_offsets": { "type": "array", "items": { "type": "string", "pattern": "^0x[0-9A-Fa-f]+$" }, "uniqueItems": true },
+        "output_sha256": { "$ref": "#/$defs/sha256" },
+        "evidence": { "$ref": "#/$defs/evidence" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

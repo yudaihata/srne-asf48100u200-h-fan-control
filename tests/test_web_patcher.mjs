@@ -5,15 +5,66 @@ import test from "node:test";
 
 import {
   PatcherError,
+  buildProvenance,
   buildCandidate,
   inspectSource,
   outputFileName,
   profileNameForTemperatures,
+  sha256Hex,
   validateManifest,
 } from "../web/patcher-core.mjs";
 
 const manifest = validateManifest(JSON.parse(await fs.readFile(new URL("../profiles/profiles.json", import.meta.url), "utf8")));
 const sourcePath = process.env.SRNE_SOURCE_BIN;
+
+async function syntheticFixture() {
+  const source = new Uint8Array(256);
+  source.set([0x23, 0x01, 0x67, 0x45], source.length - 4);
+  const constraints = {
+    allowed_start_c: [35, 40, 45],
+    allowed_max_c: [50, 55, 60, 65, 70],
+    minimum_span_c: 10,
+    stop_delta_c: 3,
+  };
+  const profiles = {};
+  let offset = 8;
+  for (const start of constraints.allowed_start_c) {
+    for (const maximum of constraints.allowed_max_c) {
+      if (maximum - start < constraints.minimum_span_c) continue;
+      const stop = start - constraints.stop_delta_c;
+      const name = `fan${start}C_max${maximum}C_off${stop}C`;
+      const candidate = source.slice();
+      candidate[offset] = offset;
+      profiles[name] = {
+        start_c: start,
+        max_c: maximum,
+        stop_c: stop,
+        curve_origin_c: start,
+        slope_f32: 70 / ((maximum - start) * 10),
+        output_sha256: await sha256Hex(candidate),
+        patches: [{ offset: `0x${offset.toString(16)}`, expected_hex: "00", replacement_hex: offset.toString(16).padStart(2, "0") }],
+        changed_offsets: [`0x${offset.toString(16)}`],
+        evidence: {
+          static_encoding: "confirmed-static",
+          candidate_identity: "confirmed-static",
+          runtime: "not-established",
+          runtime_document: null,
+        },
+      };
+      offset += 1;
+    }
+  }
+  return {
+    source,
+    manifest: validateManifest({
+      format_version: 2,
+      source: { label: "synthetic.bin", sha256: await sha256Hex(source), size: source.length, trailer_hex: "23016745" },
+      constraints,
+      profile_aliases: {},
+      profiles,
+    }),
+  };
+}
 
 test("manifest exposes exactly the 14 reviewed fan profiles", () => {
   assert.equal(Object.keys(manifest.profiles).length, 14);
@@ -34,6 +85,31 @@ test("wrong-size source is rejected before patching", async () => {
     () => inspectSource(new Uint8Array(64), manifest),
     (error) => error instanceof PatcherError && error.code === "SOURCE_SIZE",
   );
+});
+
+test("synthetic source exercises every reviewed browser profile without vendor firmware", async () => {
+  const fixture = await syntheticFixture();
+  for (const name of Object.keys(fixture.manifest.profiles)) {
+    const result = await buildCandidate(fixture.source, fixture.manifest, name);
+    assert.equal(result.changedOffsets.length, 1);
+  }
+});
+
+test("provenance records source, candidate, evidence, and repository commit", async () => {
+  const fixture = await syntheticFixture();
+  const name = Object.keys(fixture.manifest.profiles)[0];
+  const result = await buildCandidate(fixture.source, fixture.manifest, name);
+  const provenance = buildProvenance(
+    fixture.manifest,
+    name,
+    result,
+    { repository: "owner/repo", commit: "abc123" },
+    "2026-08-12T00:00:00.000Z",
+  );
+  assert.equal(provenance.repository_commit, "abc123");
+  assert.equal(provenance.source.sha256, fixture.manifest.source.sha256);
+  assert.equal(provenance.candidate.sha256, result.sha256);
+  assert.equal(provenance.profile.evidence.runtime, "not-established");
 });
 
 test("reviewed source produces exact candidate hashes", { skip: !sourcePath }, async () => {

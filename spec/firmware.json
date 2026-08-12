@@ -1,0 +1,11 @@
+{
+  "label": "ASF48100SU200_V8.16.9.bin",
+  "product_model": "ASF48100U200-H",
+  "firmware_label": "V8.16.9",
+  "sha256": "d4b4f4590689ae2effedf40e3999da8d4b9dfdcac7a1eff4635d0eca6d644600",
+  "size": 475136,
+  "trailer_hex": "23016745ab89efcddcfe98ba00000000",
+  "c28x_word_base": "0x84000",
+  "tested_hardware_revision": "not-recorded",
+  "tested_updater": "not-recorded"
+}

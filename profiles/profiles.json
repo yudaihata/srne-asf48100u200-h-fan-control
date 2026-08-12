@@ -1,11 +1,19 @@
 {
-  "format_version": 1,
+  "format_version": 2,
+  "generated_from": [
+    "spec/firmware.json",
+    "spec/fan_profiles.json"
+  ],
   "source": {
     "label": "ASF48100SU200_V8.16.9.bin",
+    "product_model": "ASF48100U200-H",
+    "firmware_label": "V8.16.9",
     "sha256": "d4b4f4590689ae2effedf40e3999da8d4b9dfdcac7a1eff4635d0eca6d644600",
     "size": 475136,
     "trailer_hex": "23016745ab89efcddcfe98ba00000000",
-    "c28x_word_base": "0x84000"
+    "c28x_word_base": "0x84000",
+    "tested_hardware_revision": "not-recorded",
+    "tested_updater": "not-recorded"
   },
   "constraints": {
     "allowed_start_c": [
@@ -34,7 +42,6 @@
       "stop_c": 32,
       "curve_origin_c": 35,
       "slope_f32": 0.46666666865348816,
-      "output_sha256": "b3b1f06579af8e35a374a858b642e6aafdd55f90bff7ddf4b8898c764f181618",
       "patches": [
         {
           "offset": "0x24A04",
@@ -55,9 +62,9 @@
           "meaning": "MOVIZ curve slope high half for 0.46666666865348816"
         },
         {
-          "offset": "0x24B7E",
-          "expected_hex": "49f8",
-          "replacement_hex": "c9eb",
+          "offset": "0x24B7C",
+          "expected_hex": "b0e849f8",
+          "replacement_hex": "b0e8c9eb",
           "meaning": "ADDF32 curve origin: -450.0 to -350.0 deci-C"
         },
         {
@@ -77,7 +84,14 @@
         "0x24B80",
         "0x24B82",
         "0x24B83"
-      ]
+      ],
+      "output_sha256": "b3b1f06579af8e35a374a858b642e6aafdd55f90bff7ddf4b8898c764f181618",
+      "evidence": {
+        "static_encoding": "confirmed-static",
+        "candidate_identity": "confirmed-static",
+        "runtime": "not-established",
+        "runtime_document": null
+      }
     },
     "fan35C_max55C_off32C": {
       "start_c": 35,
@@ -85,7 +99,6 @@
       "stop_c": 32,
       "curve_origin_c": 35,
       "slope_f32": 0.3499999940395355,
-      "output_sha256": "938af6805f4ace42775e7faefbfcef4608f69725f39a20412e5f98894392ae2a",
       "patches": [
         {
           "offset": "0x24A04",
@@ -106,9 +119,9 @@
           "meaning": "MOVIZ curve slope high half for 0.3499999940395355"
         },
         {
-          "offset": "0x24B7E",
-          "expected_hex": "49f8",
-          "replacement_hex": "c9eb",
+          "offset": "0x24B7C",
+          "expected_hex": "b0e849f8",
+          "replacement_hex": "b0e8c9eb",
           "meaning": "ADDF32 curve origin: -450.0 to -350.0 deci-C"
         },
         {
@@ -128,7 +141,14 @@
         "0x24B80",
         "0x24B82",
         "0x24B83"
-      ]
+      ],
+      "output_sha256": "938af6805f4ace42775e7faefbfcef4608f69725f39a20412e5f98894392ae2a",
+      "evidence": {
+        "static_encoding": "confirmed-static",
+        "candidate_identity": "confirmed-static",
+        "runtime": "not-established",
+        "runtime_document": null
+      }
     },
     "fan35C_max60C_off32C": {
       "start_c": 35,
@@ -136,7 +156,6 @@
       "stop_c": 32,
       "curve_origin_c": 35,
       "slope_f32": 0.2800000011920929,
-      "output_sha256": "39b3c5cff7f6063e588f7e3f39ddba974e1c2a976df1a31dd239599d9ab35b1c",
       "patches": [
         {
           "offset": "0x24A04",
@@ -157,9 +176,9 @@
           "meaning": "MOVIZ curve slope high half for 0.2800000011920929"
         },
         {
-          "offset": "0x24B7E",
-          "expected_hex": "49f8",
-          "replacement_hex": "c9eb",
+          "offset": "0x24B7C",
+          "expected_hex": "b0e849f8",
+          "replacement_hex": "b0e8c9eb",
           "meaning": "ADDF32 curve origin: -450.0 to -350.0 deci-C"
         },
         {
@@ -174,7 +193,14 @@
         "0x24A12",
         "0x24B7E",
         "0x24B7F"
-      ]
+      ],
+      "output_sha256": "39b3c5cff7f6063e588f7e3f39ddba974e1c2a976df1a31dd239599d9ab35b1c",
+      "evidence": {
+        "static_encoding": "confirmed-static",
+        "candidate_identity": "confirmed-static",
+        "runtime": "runtime-observed",
+        "runtime_document": "docs/runtime-validation.md"
+      }
     },
     "fan35C_max65C_off32C": {
       "start_c": 35,
@@ -182,7 +208,6 @@
       "stop_c": 32,
       "curve_origin_c": 35,
       "slope_f32": 0.23333333432674408,
-      "output_sha256": "6dcd6995a772e6a1a228e1c78e05f0a53d9c441f4e9ae517fe4f61930ee7778f",
       "patches": [
         {
           "offset": "0x24A04",
@@ -203,9 +228,9 @@
           "meaning": "MOVIZ curve slope high half for 0.23333333432674408"
         },
         {
-          "offset": "0x24B7E",
-          "expected_hex": "49f8",
-          "replacement_hex": "c9eb",
+          "offset": "0x24B7C",
+          "expected_hex": "b0e849f8",
+          "replacement_hex": "b0e8c9eb",
           "meaning": "ADDF32 curve origin: -450.0 to -350.0 deci-C"
         },
         {
@@ -225,7 +250,14 @@
         "0x24B80",
         "0x24B82",
         "0x24B83"
-      ]
+      ],
+      "output_sha256": "6dcd6995a772e6a1a228e1c78e05f0a53d9c441f4e9ae517fe4f61930ee7778f",
+      "evidence": {
+        "static_encoding": "confirmed-static",
+        "candidate_identity": "confirmed-static",
+        "runtime": "not-established",
+        "runtime_document": null
+      }
     },
     "fan35C_max70C_off32C": {
       "start_c": 35,
@@ -233,7 +265,6 @@
       "stop_c": 32,
       "curve_origin_c": 35,
       "slope_f32": 0.20000000298023224,
-      "output_sha256": "78f775a5eb47cc4f6f98fa0af40c1805cf2b5d492637c30c28035f947a318de9",
       "patches": [
         {
           "offset": "0x24A04",
@@ -254,9 +285,9 @@
           "meaning": "MOVIZ curve slope high half for 0.20000000298023224"
         },
         {
-          "offset": "0x24B7E",
-          "expected_hex": "49f8",
-          "replacement_hex": "c9eb",
+          "offset": "0x24B7C",
+          "expected_hex": "b0e849f8",
+          "replacement_hex": "b0e8c9eb",
           "meaning": "ADDF32 curve origin: -450.0 to -350.0 deci-C"
         },
         {
@@ -276,7 +307,14 @@
         "0x24B80",
         "0x24B82",
         "0x24B83"
-      ]
+      ],
+      "output_sha256": "78f775a5eb47cc4f6f98fa0af40c1805cf2b5d492637c30c28035f947a318de9",
+      "evidence": {
+        "static_encoding": "confirmed-static",
+        "candidate_identity": "confirmed-static",
+        "runtime": "not-established",
+        "runtime_document": null
+      }
     },
     "fan40C_max50C_off37C": {
       "start_c": 40,
@@ -284,7 +322,6 @@
       "stop_c": 37,
       "curve_origin_c": 40,
       "slope_f32": 0.699999988079071,
-      "output_sha256": "a1c5e76caa0f210dc9a7c5d4152b9bff1d66fb495ae465ceb559a80c9672f842",
       "patches": [
         {
           "offset": "0x24A04",
@@ -305,9 +342,9 @@
           "meaning": "MOVIZ curve slope high half for 0.699999988079071"
         },
         {
-          "offset": "0x24B7E",
-          "expected_hex": "49f8",
-          "replacement_hex": "09f2",
+          "offset": "0x24B7C",
+          "expected_hex": "b0e849f8",
+          "replacement_hex": "b0e809f2",
           "meaning": "ADDF32 curve origin: -450.0 to -400.0 deci-C"
         },
         {
@@ -327,7 +364,14 @@
         "0x24B80",
         "0x24B82",
         "0x24B83"
-      ]
+      ],
+      "output_sha256": "a1c5e76caa0f210dc9a7c5d4152b9bff1d66fb495ae465ceb559a80c9672f842",
+      "evidence": {
+        "static_encoding": "confirmed-static",
+        "candidate_identity": "confirmed-static",
+        "runtime": "not-established",
+        "runtime_document": null
+      }
     },
     "fan40C_max55C_off37C": {
       "start_c": 40,
@@ -335,7 +379,6 @@
       "stop_c": 37,
       "curve_origin_c": 40,
       "slope_f32": 0.46666666865348816,
-      "output_sha256": "f99ec3f95d1c9b1d24307f47cb999e1665cdf6ace33be7a48813ff443a736f3c",
       "patches": [
         {
           "offset": "0x24A04",
@@ -356,9 +399,9 @@
           "meaning": "MOVIZ curve slope high half for 0.46666666865348816"
         },
         {
-          "offset": "0x24B7E",
-          "expected_hex": "49f8",
-          "replacement_hex": "09f2",
+          "offset": "0x24B7C",
+          "expected_hex": "b0e849f8",
+          "replacement_hex": "b0e809f2",
           "meaning": "ADDF32 curve origin: -450.0 to -400.0 deci-C"
         },
         {
@@ -378,7 +421,14 @@
         "0x24B80",
         "0x24B82",
         "0x24B83"
-      ]
+      ],
+      "output_sha256": "f99ec3f95d1c9b1d24307f47cb999e1665cdf6ace33be7a48813ff443a736f3c",
+      "evidence": {
+        "static_encoding": "confirmed-static",
+        "candidate_identity": "confirmed-static",
+        "runtime": "not-established",
+        "runtime_document": null
+      }
     },
     "fan40C_max60C_off37C": {
       "start_c": 40,
@@ -386,7 +436,6 @@
       "stop_c": 37,
       "curve_origin_c": 40,
       "slope_f32": 0.3499999940395355,
-      "output_sha256": "3d34e483da5645535e40ec6fb920fa6b231842bcd445b202fa4218da01bcb28a",
       "patches": [
         {
           "offset": "0x24A04",
@@ -407,9 +456,9 @@
           "meaning": "MOVIZ curve slope high half for 0.3499999940395355"
         },
         {
-          "offset": "0x24B7E",
-          "expected_hex": "49f8",
-          "replacement_hex": "09f2",
+          "offset": "0x24B7C",
+          "expected_hex": "b0e849f8",
+          "replacement_hex": "b0e809f2",
           "meaning": "ADDF32 curve origin: -450.0 to -400.0 deci-C"
         },
         {
@@ -429,7 +478,14 @@
         "0x24B80",
         "0x24B82",
         "0x24B83"
-      ]
+      ],
+      "output_sha256": "3d34e483da5645535e40ec6fb920fa6b231842bcd445b202fa4218da01bcb28a",
+      "evidence": {
+        "static_encoding": "confirmed-static",
+        "candidate_identity": "confirmed-static",
+        "runtime": "not-established",
+        "runtime_document": null
+      }
     },
     "fan40C_max65C_off37C": {
       "start_c": 40,
@@ -437,7 +493,6 @@
       "stop_c": 37,
       "curve_origin_c": 40,
       "slope_f32": 0.2800000011920929,
-      "output_sha256": "97c527aa10bb4c1db72f1bb6d125e152b915d9f493cf9fdcf99828de85f7f2b4",
       "patches": [
         {
           "offset": "0x24A04",
@@ -458,9 +513,9 @@
           "meaning": "MOVIZ curve slope high half for 0.2800000011920929"
         },
         {
-          "offset": "0x24B7E",
-          "expected_hex": "49f8",
-          "replacement_hex": "09f2",
+          "offset": "0x24B7C",
+          "expected_hex": "b0e849f8",
+          "replacement_hex": "b0e809f2",
           "meaning": "ADDF32 curve origin: -450.0 to -400.0 deci-C"
         },
         {
@@ -475,7 +530,14 @@
         "0x24A12",
         "0x24B7E",
         "0x24B7F"
-      ]
+      ],
+      "output_sha256": "97c527aa10bb4c1db72f1bb6d125e152b915d9f493cf9fdcf99828de85f7f2b4",
+      "evidence": {
+        "static_encoding": "confirmed-static",
+        "candidate_identity": "confirmed-static",
+        "runtime": "not-established",
+        "runtime_document": null
+      }
     },
     "fan40C_max70C_off37C": {
       "start_c": 40,
@@ -483,7 +545,6 @@
       "stop_c": 37,
       "curve_origin_c": 40,
       "slope_f32": 0.23333333432674408,
-      "output_sha256": "c15048176b980fe21ad0145f5feca28ade41a4900a51976df65e38a14f0a49de",
       "patches": [
         {
           "offset": "0x24A04",
@@ -504,9 +565,9 @@
           "meaning": "MOVIZ curve slope high half for 0.23333333432674408"
         },
         {
-          "offset": "0x24B7E",
-          "expected_hex": "49f8",
-          "replacement_hex": "09f2",
+          "offset": "0x24B7C",
+          "expected_hex": "b0e849f8",
+          "replacement_hex": "b0e809f2",
           "meaning": "ADDF32 curve origin: -450.0 to -400.0 deci-C"
         },
         {
@@ -526,7 +587,14 @@
         "0x24B80",
         "0x24B82",
         "0x24B83"
-      ]
+      ],
+      "output_sha256": "c15048176b980fe21ad0145f5feca28ade41a4900a51976df65e38a14f0a49de",
+      "evidence": {
+        "static_encoding": "confirmed-static",
+        "candidate_identity": "confirmed-static",
+        "runtime": "not-established",
+        "runtime_document": null
+      }
     },
     "fan45C_max55C_off42C": {
       "start_c": 45,
@@ -534,7 +602,6 @@
       "stop_c": 42,
       "curve_origin_c": 45,
       "slope_f32": 0.699999988079071,
-      "output_sha256": "dbd6b970d787af2e22104f29c4c6421448fe80edf38394a866792d48a4ea901c",
       "patches": [
         {
           "offset": "0x24A04",
@@ -555,9 +622,9 @@
           "meaning": "MOVIZ curve slope high half for 0.699999988079071"
         },
         {
-          "offset": "0x24B7E",
-          "expected_hex": "49f8",
-          "replacement_hex": "49f8",
+          "offset": "0x24B7C",
+          "expected_hex": "b0e849f8",
+          "replacement_hex": "b0e849f8",
           "meaning": "ADDF32 curve origin: -450.0 to -450.0 deci-C"
         },
         {
@@ -573,7 +640,14 @@
         "0x24B80",
         "0x24B82",
         "0x24B83"
-      ]
+      ],
+      "output_sha256": "dbd6b970d787af2e22104f29c4c6421448fe80edf38394a866792d48a4ea901c",
+      "evidence": {
+        "static_encoding": "confirmed-static",
+        "candidate_identity": "confirmed-static",
+        "runtime": "not-established",
+        "runtime_document": null
+      }
     },
     "fan45C_max60C_off42C": {
       "start_c": 45,
@@ -581,7 +655,6 @@
       "stop_c": 42,
       "curve_origin_c": 45,
       "slope_f32": 0.46666666865348816,
-      "output_sha256": "a3ca7b489d9102afdd2d732db9240baeeda1e2ff3051dc5874ad3e7735eae495",
       "patches": [
         {
           "offset": "0x24A04",
@@ -602,9 +675,9 @@
           "meaning": "MOVIZ curve slope high half for 0.46666666865348816"
         },
         {
-          "offset": "0x24B7E",
-          "expected_hex": "49f8",
-          "replacement_hex": "49f8",
+          "offset": "0x24B7C",
+          "expected_hex": "b0e849f8",
+          "replacement_hex": "b0e849f8",
           "meaning": "ADDF32 curve origin: -450.0 to -450.0 deci-C"
         },
         {
@@ -620,7 +693,14 @@
         "0x24B80",
         "0x24B82",
         "0x24B83"
-      ]
+      ],
+      "output_sha256": "a3ca7b489d9102afdd2d732db9240baeeda1e2ff3051dc5874ad3e7735eae495",
+      "evidence": {
+        "static_encoding": "confirmed-static",
+        "candidate_identity": "confirmed-static",
+        "runtime": "not-established",
+        "runtime_document": null
+      }
     },
     "fan45C_max65C_off42C": {
       "start_c": 45,
@@ -628,7 +708,6 @@
       "stop_c": 42,
       "curve_origin_c": 45,
       "slope_f32": 0.3499999940395355,
-      "output_sha256": "f19242654c692336836f8b1b67514e941948f921fce085f7b0670a200acf020b",
       "patches": [
         {
           "offset": "0x24A04",
@@ -649,9 +728,9 @@
           "meaning": "MOVIZ curve slope high half for 0.3499999940395355"
         },
         {
-          "offset": "0x24B7E",
-          "expected_hex": "49f8",
-          "replacement_hex": "49f8",
+          "offset": "0x24B7C",
+          "expected_hex": "b0e849f8",
+          "replacement_hex": "b0e849f8",
           "meaning": "ADDF32 curve origin: -450.0 to -450.0 deci-C"
         },
         {
@@ -667,7 +746,14 @@
         "0x24B80",
         "0x24B82",
         "0x24B83"
-      ]
+      ],
+      "output_sha256": "f19242654c692336836f8b1b67514e941948f921fce085f7b0670a200acf020b",
+      "evidence": {
+        "static_encoding": "confirmed-static",
+        "candidate_identity": "confirmed-static",
+        "runtime": "not-established",
+        "runtime_document": null
+      }
     },
     "fan45C_max70C_off42C": {
       "start_c": 45,
@@ -675,7 +761,6 @@
       "stop_c": 42,
       "curve_origin_c": 45,
       "slope_f32": 0.2800000011920929,
-      "output_sha256": "d4b4f4590689ae2effedf40e3999da8d4b9dfdcac7a1eff4635d0eca6d644600",
       "patches": [
         {
           "offset": "0x24A04",
@@ -696,9 +781,9 @@
           "meaning": "MOVIZ curve slope high half for 0.2800000011920929"
         },
         {
-          "offset": "0x24B7E",
-          "expected_hex": "49f8",
-          "replacement_hex": "49f8",
+          "offset": "0x24B7C",
+          "expected_hex": "b0e849f8",
+          "replacement_hex": "b0e849f8",
           "meaning": "ADDF32 curve origin: -450.0 to -450.0 deci-C"
         },
         {
@@ -708,7 +793,14 @@
           "meaning": "MOVXI curve slope low half for 0.2800000011920929"
         }
       ],
-      "changed_offsets": []
+      "changed_offsets": [],
+      "output_sha256": "d4b4f4590689ae2effedf40e3999da8d4b9dfdcac7a1eff4635d0eca6d644600",
+      "evidence": {
+        "static_encoding": "confirmed-static",
+        "candidate_identity": "stock-equivalent",
+        "runtime": "runtime-observed",
+        "runtime_document": "docs/runtime-validation.md"
+      }
     }
   }
 }

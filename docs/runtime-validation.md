@@ -2,7 +2,23 @@
 
 ## Test context
 
-The aggressive `fan35C_off32C` candidate was installed on a test inverter and
+Evidence metadata retained for this historical comparison:
+
+| Field | Recorded value |
+|---|---|
+| Product family | ASF48100U200-H |
+| Source firmware | `ASF48100SU200_V8.16.9.bin` |
+| Candidate profile | `fan35C_max60C_off32C` (legacy alias `fan35C_off32C`) |
+| Hardware revision | not recorded |
+| Device identifier | not retained |
+| Updater and updater version | not recorded |
+| Observation duration | one 24-hour stock day and one 24-hour candidate day |
+| Recovery procedure verification | not recorded |
+
+The missing fields limit this result to a historical observation; they must not
+be silently inferred for another device.
+
+The aggressive `fan35C_max60C_off32C` candidate was installed on a test inverter and
 reported to operate normally, with increased audible fan activity. A 24-hour
 Home Assistant history export was then compared with a stock-firmware day.
 

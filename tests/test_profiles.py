@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import copy
 import sys
 import unittest
 from pathlib import Path
@@ -15,7 +16,9 @@ from common import (  # noqa: E402
     load_manifest,
     materialize_custom_profile,
     resolve_profile,
+    validate_manifest,
 )
+from generate_manifest import generate  # noqa: E402
 
 
 class ProfileTests(unittest.TestCase):
@@ -25,7 +28,7 @@ class ProfileTests(unittest.TestCase):
 
     def test_manifest_is_valid_json_and_has_all_reviewed_profiles(self) -> None:
         parsed = json.loads((ROOT / "profiles" / "profiles.json").read_text())
-        self.assertEqual(parsed["format_version"], 1)
+        self.assertEqual(parsed["format_version"], 2)
         expected = {
             f"fan{start}C_max{maximum}C_off{start - 3}C"
             for start in (35, 40, 45)
@@ -35,6 +38,17 @@ class ProfileTests(unittest.TestCase):
         self.assertEqual(set(parsed["profiles"]), expected)
         self.assertEqual(len(expected), 14)
         self.assertNotIn("fan45C_max50C_off42C", expected)
+
+    def test_committed_manifest_is_generated_from_specs(self) -> None:
+        parsed = json.loads((ROOT / "profiles" / "profiles.json").read_text())
+        self.assertEqual(parsed, generate())
+
+    def test_reviewed_profiles_match_canonical_encoder(self) -> None:
+        for profile in self.manifest["profiles"].values():
+            derived = build_custom_profile(
+                profile["start_c"], profile["max_c"], profile["stop_c"]
+            )
+            self.assertEqual(profile["patches"], derived["patches"])
 
     def test_patch_definitions_change_only_declared_offsets(self) -> None:
         size = self.manifest["source"]["size"]
@@ -107,10 +121,12 @@ class ProfileTests(unittest.TestCase):
             build_custom_profile(40, 40, 37)
         with self.assertRaises(VerificationError):
             build_custom_profile(40, 60, 40)
+        with self.assertRaises(VerificationError):
+            build_custom_profile(40, 45, 37)
 
     def test_custom_origin_encoder_matches_assembled_boundaries(self) -> None:
         low = {
-            patch["offset"]: patch for patch in build_custom_profile(1, 2, 0)["patches"]
+            patch["offset"]: patch for patch in build_custom_profile(1, 11, 0)["patches"]
         }
         high = {
             patch["offset"]: patch
@@ -118,6 +134,24 @@ class ProfileTests(unittest.TestCase):
         }
         self.assertEqual(low["0x24B7C"]["replacement_hex"], "b0e80948")
         self.assertEqual(high["0x24B7C"]["replacement_hex"], "b0e889fe")
+
+    def test_manifest_rejects_bad_hash_overlap_and_evidence(self) -> None:
+        bad_hash = copy.deepcopy(self.manifest)
+        bad_hash["source"]["sha256"] = "not-a-hash"
+        with self.assertRaises(VerificationError):
+            validate_manifest(bad_hash)
+
+        bad_overlap = copy.deepcopy(self.manifest)
+        profile = next(iter(bad_overlap["profiles"].values()))
+        profile["patches"].append(copy.deepcopy(profile["patches"][0]))
+        with self.assertRaises(VerificationError):
+            validate_manifest(bad_overlap)
+
+        bad_evidence = copy.deepcopy(self.manifest)
+        profile = next(iter(bad_evidence["profiles"].values()))
+        profile["evidence"]["runtime"] = "verified"
+        with self.assertRaises(VerificationError):
+            validate_manifest(bad_evidence)
 
 
 if __name__ == "__main__":

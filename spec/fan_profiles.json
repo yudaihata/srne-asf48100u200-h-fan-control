@@ -1,0 +1,32 @@
+{
+  "constraints": {
+    "allowed_start_c": [35, 40, 45],
+    "allowed_max_c": [50, 55, 60, 65, 70],
+    "minimum_span_c": 10,
+    "stop_delta_c": 3
+  },
+  "profile_aliases": {
+    "fan35C_off32C": "fan35C_max60C_off32C",
+    "fan40C_off37C": "fan40C_max65C_off37C"
+  },
+  "output_sha256": {
+    "fan35C_max50C_off32C": "b3b1f06579af8e35a374a858b642e6aafdd55f90bff7ddf4b8898c764f181618",
+    "fan35C_max55C_off32C": "938af6805f4ace42775e7faefbfcef4608f69725f39a20412e5f98894392ae2a",
+    "fan35C_max60C_off32C": "39b3c5cff7f6063e588f7e3f39ddba974e1c2a976df1a31dd239599d9ab35b1c",
+    "fan35C_max65C_off32C": "6dcd6995a772e6a1a228e1c78e05f0a53d9c441f4e9ae517fe4f61930ee7778f",
+    "fan35C_max70C_off32C": "78f775a5eb47cc4f6f98fa0af40c1805cf2b5d492637c30c28035f947a318de9",
+    "fan40C_max50C_off37C": "a1c5e76caa0f210dc9a7c5d4152b9bff1d66fb495ae465ceb559a80c9672f842",
+    "fan40C_max55C_off37C": "f99ec3f95d1c9b1d24307f47cb999e1665cdf6ace33be7a48813ff443a736f3c",
+    "fan40C_max60C_off37C": "3d34e483da5645535e40ec6fb920fa6b231842bcd445b202fa4218da01bcb28a",
+    "fan40C_max65C_off37C": "97c527aa10bb4c1db72f1bb6d125e152b915d9f493cf9fdcf99828de85f7f2b4",
+    "fan40C_max70C_off37C": "c15048176b980fe21ad0145f5feca28ade41a4900a51976df65e38a14f0a49de",
+    "fan45C_max55C_off42C": "dbd6b970d787af2e22104f29c4c6421448fe80edf38394a866792d48a4ea901c",
+    "fan45C_max60C_off42C": "a3ca7b489d9102afdd2d732db9240baeeda1e2ff3051dc5874ad3e7735eae495",
+    "fan45C_max65C_off42C": "f19242654c692336836f8b1b67514e941948f921fce085f7b0670a200acf020b",
+    "fan45C_max70C_off42C": "d4b4f4590689ae2effedf40e3999da8d4b9dfdcac7a1eff4635d0eca6d644600"
+  },
+  "runtime_evidence": {
+    "fan35C_max60C_off32C": "docs/runtime-validation.md",
+    "fan45C_max70C_off42C": "docs/runtime-validation.md"
+  }
+}
