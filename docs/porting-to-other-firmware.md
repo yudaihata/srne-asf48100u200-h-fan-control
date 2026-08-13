@@ -9,9 +9,10 @@ temperature constant or byte sequence is only a lead until instruction
 boundaries, control flow, data flow, peripheral use, and original bytes all
 agree.
 
-For an investigation, start with the record template at
-[`docs/templates/porting-record.yaml`](templates/porting-record.yaml). Coding
-agents working in this repository must also follow [`AGENTS.md`](../AGENTS.md).
+An optional record template is available at
+[`docs/templates/porting-record.yaml`](templates/porting-record.yaml). It can be
+used to keep source details, evidence, open questions, and validation results
+together during an investigation.
 
 The concise V8.16.9 disassembly evidence is in
 [`analysis/v8.16.9-fan-control.annotated.asm`](../analysis/v8.16.9-fan-control.annotated.asm).
@@ -196,7 +197,8 @@ evidence-backed change.
 
 ## 7. Compare another version structurally
 
-Before declaring a match, fill in an evidence table like this:
+When comparing versions, a table like the following helps show which parts of
+the control path have actually been identified and which remain unknown:
 
 | Anchor | Evidence to locate | Status |
 |---|---|---|
@@ -210,8 +212,10 @@ Before declaring a match, fill in an evidence table like this:
 | Smoothing | accumulator data flow | unknown |
 | Lock and fault path | physical input through error state | unknown |
 
-Every row should be at least `strongly-supported`. The proposed patch
-instructions and their original bytes should be `confirmed-static`.
+Patch locations should not be selected while any part of this control path
+remains unknown. Before proceeding, each conclusion should have at least
+`strongly-supported` evidence, and the proposed patch instructions and their
+original bytes need `confirmed-static` evidence.
 
 Similarity or signature scanning can prioritize a region for manual review. It
 cannot complete a row by itself. A materially different control structure calls
@@ -242,7 +246,8 @@ instruction.
 
 ## 9. Validate the candidate as an artifact
 
-The builder and an independent verifier should check:
+After creating a candidate, verify it independently against the pristine image.
+The verification should cover:
 
 - pristine source SHA-256 and size;
 - expected trailer, checksum, or container metadata;
@@ -303,7 +308,7 @@ evidence and the next read-only experiment—not a guessed patch.
 - **Hardware-revision overclaim:** a shared firmware label does not prove identical fans, sensors, power stages, or boards.
 - **Static-success overclaim:** valid instructions and hashes do not prove a safe device update.
 
-## Publication boundary
+## What can be published
 
 Publish original documentation, pseudocode, hashes, tools, and only the short
 instruction excerpts needed to support conclusions. Do not publish source or
