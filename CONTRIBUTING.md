@@ -2,6 +2,8 @@
 
 This is a safety-sensitive reverse-engineering project. Keep changes small and
 separate static conclusions, candidate generation, and physical-device writes.
+Coding agents must also follow [`AGENTS.md`](AGENTS.md). New firmware analyses
+should start from [`docs/templates/porting-record.yaml`](docs/templates/porting-record.yaml).
 
 Before opening a pull request:
 
