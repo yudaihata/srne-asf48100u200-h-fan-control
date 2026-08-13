@@ -1,0 +1,72 @@
+# Copy this file for each new firmware investigation. Use "unknown" rather than
+# guessing. Static analysis, candidate generation, and physical installation are
+# separate stages.
+
+result: in_progress # matched | not_matched | blocked | in_progress
+
+source:
+  manufacturer: SRNE
+  product_model: unknown
+  hardware_revision: unknown
+  firmware_label: unknown
+  filename: unknown
+  origin: unknown
+  byte_size: unknown
+  sha256: unknown
+  trailer_or_container: unknown
+  extraction_steps: []
+
+mapping:
+  architecture: unknown
+  endianness: unknown
+  address_unit_bytes: unknown
+  load_base: unknown
+  image_layout: unknown
+  disassembler: unknown
+  disassembler_version: unknown
+
+runtime_context:
+  fan_model: unknown
+  fan_wiring: unknown
+  observed_stock_behavior: unknown
+  temperature_telemetry_source: unknown
+  recovery_method: unknown
+
+fan_control:
+  pwm_channel: unknown
+  pwm_period: unknown
+  temperature_source: unknown
+  temperature_unit: unknown
+  start_threshold: unknown
+  stop_threshold: unknown
+  persistence: unknown
+  demand_sources: []
+  arbitration: unknown
+  smoothing: unknown
+  lock_or_tach_input: unknown
+  fault_path: unknown
+
+evidence:
+  confirmed_static: []
+  strongly_supported: []
+  runtime_observed: []
+  hypotheses: []
+  not_established: []
+
+patch_plan:
+  authorized: false
+  requested_behavior: unknown
+  changes: []
+  exact_changed_offsets: []
+  preserved_paths: []
+  output_sha256: unknown
+
+runtime_plan:
+  authorized: false
+  exact_device: unknown
+  monitoring: []
+  rollback_thresholds: []
+  observer: unknown
+
+unresolved: []
+next_read_only_experiment: unknown
