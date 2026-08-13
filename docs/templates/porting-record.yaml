@@ -1,13 +1,17 @@
-# Copy this file for each new firmware investigation. Use "unknown" rather than
-# guessing. Static analysis, candidate generation, and physical installation are
-# separate stages.
+# Copy this file for each new firmware investigation. Use "unknown",
+# "not-recorded", or "not-established" rather than guessing. Static analysis,
+# candidate generation, and physical installation are separate stages.
 
 result: in_progress # matched | not_matched | blocked | in_progress
 
 source:
   manufacturer: SRNE
   product_model: unknown
-  hardware_revision: unknown
+  device_identifier: not-retained
+  hardware_revisions:
+    control_panel: unknown
+    power_amplifier_board: unknown
+  firmware_applicability: unknown
   firmware_label: unknown
   filename: unknown
   origin: unknown
@@ -30,6 +34,10 @@ runtime_context:
   fan_wiring: unknown
   observed_stock_behavior: unknown
   temperature_telemetry_source: unknown
+  updater:
+    name: unknown
+    platform: unknown
+    version: unknown
   recovery_method: unknown
 
 fan_control:

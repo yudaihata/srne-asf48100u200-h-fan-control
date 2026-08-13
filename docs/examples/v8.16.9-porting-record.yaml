@@ -1,0 +1,193 @@
+# Completed example for the exact V8.16.9 image analyzed in this repository.
+# Unknown or unrecorded details remain explicit. This file records historical
+# evidence; it does not authorize a new firmware build or device write.
+
+result: matched
+
+source:
+  manufacturer: SRNE
+  product_model: ASF48100U200-H
+  device_identifier: not-retained
+  hardware_revisions:
+    control_panel: V3.00
+    power_amplifier_board: V3.02
+  firmware_applicability: >-
+    The firmware was identified for model ASF48100U200-H. No board-revision
+    applicability statement was provided with it.
+  firmware_label: V8.16.9
+  filename: ASF48100SU200_V8.16.9.bin
+  origin: not-recorded
+  byte_size: 475136
+  sha256: d4b4f4590689ae2effedf40e3999da8d4b9dfdcac7a1eff4635d0eca6d644600
+  trailer_or_container: "raw image; final marker 23016745ab89efcddcfe98ba00000000"
+  extraction_steps: []
+
+mapping:
+  architecture: TI TMS320C28x/C2000
+  endianness: little-endian
+  address_unit_bytes: 2
+  load_base: "C28x word address 0x84000 at file offset 0"
+  image_layout: raw image
+  disassembler: TI dis2000
+  disassembler_version: 25.11.1 LTS
+
+runtime_context:
+  fan_model: DA08025B12UR
+  fan_wiring: not-recorded
+  observed_stock_behavior: >-
+    Temperature demand starts at approximately 45 C and stops at approximately
+    42 C, alongside load, charge, and discharge-related fan demands.
+  temperature_telemetry_source: >-
+    Home Assistant history export containing heatsink temperatures A, B, and C
+  updater:
+    name: iPower
+    platform: Windows
+    version: 2.1.2.0
+  recovery_method: not-established
+
+fan_control:
+  pwm_channel: ePWM4B
+  pwm_period: 3333
+  temperature_source: recovered internal-temperature input in AR6
+  temperature_unit: deci-degrees C
+  start_threshold: "450 (approximately 45.0 C)"
+  stop_threshold: "420 (approximately 42.0 C)"
+  persistence: >-
+    20 start cycles and 100 stop cycles, approximately 2 s and 10 s at the
+    recovered call cadence
+  demand_sources:
+    - temperature
+    - load-related
+    - charge-related
+    - discharge-related
+  arbitration: maximum of the four recovered demand values
+  smoothing: "state += (target - state) / 32 in fixed-point form"
+  lock_or_tach_input: >-
+    GPIO67 active-low lock indication with no recovered pulse-count RPM
+    measurement
+  fault_path: >-
+    50-cycle lock/recovery persistence, approximately 5 s; monitoring is
+    disabled while the fan is stopped
+
+evidence:
+  confirmed_static:
+    - claim: >-
+        File offset zero maps to C28x word address 0x84000, and the recovered
+        fan routine spans word addresses 0x964B4 through 0x966B6.
+      reference: analysis/v8.16.9-fan-control.annotated.asm
+    - claim: >-
+        ePWM4B is initialized with a 3333-count period and receives the runtime
+        fan compare value.
+      reference: analysis/v8.16.9-fan-control.annotated.asm
+    - claim: >-
+        CMP instructions at word addresses 0x96501 and 0x96508 implement the
+        450/420 temperature thresholds and their persistence state changes.
+      reference: analysis/v8.16.9-fan-control.annotated.asm
+    - claim: >-
+        The temperature curve uses an origin of -450.0, a slope of 0.28, and
+        an offset of 30 before arbitration and smoothing.
+      reference: analysis/v8.16.9-fan-control.annotated.asm
+    - claim: >-
+        The fan35C_max60C_off32C replacement encodings, exact changed offsets,
+        and output SHA-256 reproduce from the pristine source.
+      reference: profiles/profiles.json
+  strongly_supported:
+    - claim: >-
+        The recovered request selector takes the maximum of temperature, load,
+        charge, and discharge-related demands and smooths it by 1/32.
+      reference: analysis/v8.16.9-fan-control.annotated.asm
+    - claim: >-
+        GPIO67 is an active-low fan-lock indication rather than a pulse-count
+        tachometer input.
+      reference: docs/static-analysis.md
+  runtime_observed:
+    - claim: The physical product label identifies the unit as ASF48100U200-H.
+      evidence: owner-inspected product label; serial number intentionally omitted
+    - claim: >-
+        Modbus register 0x0016 reported control-panel version V3.00, and register
+        0x0017 reported power-amplifier-board version V3.02.
+      evidence: owner-observed Modbus values on the test inverter
+    - claim: The installed fan is marked DA08025B12UR.
+      evidence: owner inspection of the physical fan
+    - claim: Windows iPower 2.1.2.0 was used for the historical update.
+      evidence: owner observation during the update
+    - claim: >-
+        The fan35C_max60C_off32C candidate operated on one test inverter and
+        produced the cooling differences recorded in the runtime report.
+      reference: docs/runtime-validation.md
+  hypotheses: []
+  not_established:
+    - A verified recovery procedure after an interrupted or rejected update
+    - Compatibility with other control-panel or power-amplifier-board revisions
+    - Compatibility with another product model or firmware image
+    - Updater acceptance, boot behavior, or runtime safety for the other 12 non-stock reviewed profiles
+
+patch_plan:
+  authorized: false
+  authorization_note: >-
+    This is a historical completed example. It grants no current authorization
+    to generate or install a candidate.
+  requested_behavior: >-
+    Historical fan35C_max60C_off32C profile: start at 35 C, reach the
+    temperature-derived maximum request at 60 C, and stop at 32 C
+  profile: fan35C_max60C_off32C
+  changes:
+    - instruction_address: "0x96501"
+      file_offset: "0x24A04"
+      original_instruction: "CMP AR6,#450"
+      original_hex: "c201"
+      replacement_instruction: "CMP AR6,#350"
+      replacement_hex: "5e01"
+      reason: move the temperature start gate from 45 C to 35 C
+    - instruction_address: "0x96508"
+      file_offset: "0x24A12"
+      original_instruction: "CMP AR6,#420"
+      original_hex: "a401"
+      replacement_instruction: "CMP AR6,#320"
+      replacement_hex: "4001"
+      reason: retain 3 C hysteresis below the new start threshold
+    - instruction_address: "0x965BE"
+      file_offset: "0x24B7C"
+      original_instruction: "ADDF32 R1H,#-450.0,R1H"
+      original_hex: "b0e849f8"
+      replacement_instruction: "ADDF32 R1H,#-350.0,R1H"
+      replacement_hex: "b0e8c9eb"
+      reason: align the temperature-demand curve origin with the new start threshold
+  exact_changed_offsets:
+    - "0x24A04"
+    - "0x24A12"
+    - "0x24B7E"
+    - "0x24B7F"
+  preserved_paths:
+    - ePWM4B setup and minimum-duty behavior
+    - load, charge, and discharge-related demand calculation
+    - final arbitration and smoothing
+    - GPIO67 lock detection and fan-error handling
+    - inverter, charging, protection, and MPPT logic
+  output_sha256: 39b3c5cff7f6063e588f7e3f39ddba974e1c2a976df1a31dd239599d9ab35b1c
+  complete_profile_manifest: profiles/profiles.json
+
+runtime_plan:
+  authorized: false
+  authorization_note: >-
+    Historical observations are recorded in docs/runtime-validation.md; no new
+    device write or runtime test is authorized by this example.
+  exact_device: >-
+    One owner-operated ASF48100U200-H; serial number intentionally not retained
+    in the public repository
+  monitoring:
+    - heatsink temperatures A, B, and C
+    - load
+    - PV2 power
+    - battery power
+    - outdoor temperature
+  rollback_thresholds: []
+  observer: device owner
+
+unresolved:
+  - Hardware revision and updater details were not retained in the original 24-hour comparison record; the values above were recorded later from the same owner-operated unit.
+  - The official behavior after an interrupted or rejected update is unknown.
+  - Applicability beyond the identified model and observed board versions is unknown.
+next_read_only_experiment: >-
+  Locate authoritative updater or service documentation describing recovery
+  after an interrupted or rejected firmware write.

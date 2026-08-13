@@ -6,17 +6,23 @@ Evidence metadata retained for this historical comparison:
 
 | Field | Recorded value |
 |---|---|
-| Product family | ASF48100U200-H |
+| Product model | ASF48100U200-H, confirmed from the physical product label |
 | Source firmware | `ASF48100SU200_V8.16.9.bin` |
 | Candidate profile | `fan35C_max60C_off32C` (legacy alias `fan35C_off32C`) |
-| Hardware revision | not recorded |
+| Control-panel version | V3.00, read later from Modbus register `0x0016` |
+| Power-amplifier-board version | V3.02, read later from Modbus register `0x0017` |
+| Fan model | `DA08025B12UR`, confirmed by physical inspection |
 | Device identifier | not retained |
-| Updater and updater version | not recorded |
+| Updater | iPower 2.1.2.0 for Windows |
 | Observation duration | one 24-hour stock day and one 24-hour candidate day |
-| Recovery procedure verification | not recorded |
+| Recovery procedure verification | not established |
 
-The missing fields limit this result to a historical observation; they must not
-be silently inferred for another device.
+The board versions, fan model, and updater version were recorded later from the
+same owner-operated unit and were not embedded in the original 24-hour history
+exports. The firmware itself was identified by product model; no statement of
+board-revision compatibility accompanied it. These observations must not be
+inferred for another device, and no serial number is retained in this public
+repository.
 
 The aggressive `fan35C_max60C_off32C` candidate was installed on a test inverter and
 reported to operate normally, with increased audible fan activity. A 24-hour
