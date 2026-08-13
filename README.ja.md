@@ -103,6 +103,8 @@ C28x即値で正確に表現するためのものです。Browser Patcherの最�
   オフセット、静的解析の限界
 - [`docs/porting-to-other-firmware.md`](docs/porting-to-other-firmware.md)：
   別ファームウェアを人間が再解析するための証拠ベース技術ガイド
+- [`docs/examples/v8.16.9-porting-record.yaml`](docs/examples/v8.16.9-porting-record.yaml)：
+  解析済みV8.16.9イメージの記入済み証拠記録
 - [`analysis/v8.16.9-fan-control.annotated.asm`](analysis/v8.16.9-fan-control.annotated.asm)：
   V8.16.9の解析結果を裏付ける必要最小限の注釈付き逆アセンブル断片
 - [`docs/runtime-validation.md`](docs/runtime-validation.md)：fan35c実機ログの

@@ -12,8 +12,8 @@
     "size": 475136,
     "trailer_hex": "23016745ab89efcddcfe98ba00000000",
     "c28x_word_base": "0x84000",
-    "tested_hardware_revision": "not-recorded",
-    "tested_updater": "not-recorded"
+    "tested_hardware_revision": "control panel V3.00; power amplifier board V3.02",
+    "tested_updater": "iPower 2.1.2.0 for Windows"
   },
   "constraints": {
     "allowed_start_c": [

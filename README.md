@@ -107,6 +107,8 @@ The expected source SHA-256 is
   offsets, instructions, and confidence boundaries.
 - [`docs/porting-to-other-firmware.md`](docs/porting-to-other-firmware.md):
   human-readable evidence-gated method for analyzing another firmware image.
+- [`docs/examples/v8.16.9-porting-record.yaml`](docs/examples/v8.16.9-porting-record.yaml):
+  completed evidence record for the analyzed V8.16.9 image.
 - [`analysis/v8.16.9-fan-control.annotated.asm`](analysis/v8.16.9-fan-control.annotated.asm):
   minimal annotated disassembly excerpts supporting the V8.16.9 findings.
 - [`docs/runtime-validation.md`](docs/runtime-validation.md): Home Assistant

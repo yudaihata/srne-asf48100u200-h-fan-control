@@ -12,7 +12,9 @@ agree.
 An optional record template is available at
 [`docs/templates/porting-record.yaml`](templates/porting-record.yaml). It can be
 used to keep source details, evidence, open questions, and validation results
-together during an investigation.
+together during an investigation. The completed
+[`V8.16.9 example`](examples/v8.16.9-porting-record.yaml) shows how known,
+inferred, and unrecorded details are kept separate.
 
 The concise V8.16.9 disassembly evidence is in
 [`analysis/v8.16.9-fan-control.annotated.asm`](../analysis/v8.16.9-fan-control.annotated.asm).

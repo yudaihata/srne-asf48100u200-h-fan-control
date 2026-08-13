@@ -17,7 +17,7 @@ Current runtime status:
 
 | Profile | Static identity | Runtime |
 |---|---|---|
-| `fan35C_max60C_off32C` | confirmed | observed on one test inverter; hardware revision and updater were not recorded |
+| `fan35C_max60C_off32C` | confirmed | observed on one ASF48100U200-H with control panel V3.00, power amplifier board V3.02, and Windows iPower 2.1.2.0 |
 | `fan45C_max70C_off42C` | stock-equivalent | stock-day observations are included in the comparison |
 | Other 12 reviewed profiles | confirmed | not established |
 
