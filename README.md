@@ -37,10 +37,6 @@ The selected BIN never leaves the browser. The page validates the exact source
 SHA-256, size, trailer, original instruction bytes, changed offsets, and final
 candidate SHA-256 before enabling download.
 
-The V8.16.9 requirement identifies the pristine source BIN selected for
-patching; it does not describe the firmware version currently installed on the
-inverter.
-
 ## Manual CLI and reproducibility
 
 The CLI is intended for offline use, automation, independent reproduction, and
