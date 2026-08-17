@@ -43,6 +43,8 @@ runtime_context:
     name: iPower
     platform: Windows
     version: 2.1.2.0
+    authenticity_check: not-enforced-on-observed-update
+    version_check: not-enforced-on-observed-update
   recovery_method: not-established
 
 fan_control:
@@ -112,6 +114,11 @@ evidence:
     - claim: Windows iPower 2.1.2.0 was used for the historical update.
       evidence: owner observation during the update
     - claim: >-
+        On this identified unit and updater combination, the update path did not
+        enforce that the selected file was an official vendor image or reject it
+        based on firmware-version metadata.
+      evidence: owner-observed update behavior
+    - claim: >-
         The fan35C_max60C_off32C candidate operated on one test inverter and
         produced the cooling differences recorded in the runtime report.
       reference: docs/runtime-validation.md
@@ -120,6 +127,7 @@ evidence:
     - A verified recovery procedure after an interrupted or rejected update
     - Compatibility with other control-panel or power-amplifier-board revisions
     - Compatibility with another product model or firmware image
+    - Authenticity and version-check behavior on another device, board revision, or updater version
     - Updater acceptance, boot behavior, or runtime safety for the other 12 non-stock reviewed profiles
 
 patch_plan:

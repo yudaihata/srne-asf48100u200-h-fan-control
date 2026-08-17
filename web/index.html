@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#ffffff">
-    <meta name="description" content="SRNE ASF48100U200-H V8.16.9用の非公式ファン制御ブラウザパッチャー。BINは端末内だけで処理されます。">
+    <meta name="description" content="SRNE ASF48100U200-HのV8.16.9原本BINを対象とする非公式ファン制御ブラウザパッチャー。BINは端末内だけで処理されます。">
     <meta property="og:title" content="ASF48100U200-H Fan-Control Browser Patcher">
     <meta property="og:description" content="原本を照合し、ブラウザ内だけでファン制御候補BINを生成します。">
     <meta property="og:type" content="website">
@@ -16,7 +16,7 @@
   <body>
     <header>
       <h1>ASF48100U200-H<br>Fan-Control Browser Patcher</h1>
-      <p>V8.16.9専用・非公式</p>
+      <p>V8.16.9原本BIN専用・非公式</p>
     </header>
 
     <main>
@@ -73,7 +73,7 @@
         <h2 id="build-title">3. 候補BINを生成</h2>
         <label class="agreement">
           <input id="agreement" type="checkbox">
-          <span>対象が<strong>ASF48100U200-H / V8.16.9</strong>であることを確認し、非公式改変のリスクを理解しています。</span>
+          <span>書き込み先は<strong>ASF48100U200-H</strong>、選択した原本BINは<strong>V8.16.9</strong>です。非公式改変のリスクを理解しています。</span>
         </label>
 
         <div id="status" class="status" data-kind="idle" role="status" aria-live="polite">
@@ -99,7 +99,7 @@
 
       <details class="safety">
         <summary>安全上の注意</summary>
-        <p>非公式ファームウェアの書き込みは、機器の使用不能、感電、火災、保証・法規上の問題につながる可能性があります。別型番・別バージョンには使用しないでください。公式のリカバリー手順は確認されていません。</p>
+        <p>非公式ファームウェアの書き込みは、機器の使用不能、感電、火災、保証・法規上の問題につながる可能性があります。別型番へ書き込んだり、別バージョンのBINをパッチ元に使用したりしないでください。確認した実機とiPower 2.1.2.0の組み合わせでは、更新時にファイルの真正性やバージョンは強制確認されませんでした。公式のリカバリー手順は確認されていません。</p>
         <a href="https://github.com/yudaihata/srne-asf48100u200-h-fan-control/blob/main/docs/safety.md">安全事項をすべて読む</a>
       </details>
     </main>

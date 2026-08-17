@@ -16,6 +16,7 @@ import {
 
 const manifest = validateManifest(JSON.parse(await fs.readFile(new URL("../profiles/profiles.json", import.meta.url), "utf8")));
 const sourcePath = process.env.SRNE_SOURCE_BIN;
+const indexHtml = await fs.readFile(new URL("../web/index.html", import.meta.url), "utf8");
 
 async function syntheticFixture() {
   const source = new Uint8Array(256);
@@ -78,6 +79,11 @@ test("output names are deterministic", () => {
     outputFileName("fan40C_max65C_off37C"),
     "ASF48100SU200_V8.16.9_fan40C_max65C_off37C.bin",
   );
+});
+
+test("agreement distinguishes the source BIN from the installed firmware version", () => {
+  assert.match(indexHtml, /書き込み先は<strong>ASF48100U200-H<\/strong>/);
+  assert.match(indexHtml, /選択した原本BINは<strong>V8\.16\.9<\/strong>です/);
 });
 
 test("wrong-size source is rejected before patching", async () => {
