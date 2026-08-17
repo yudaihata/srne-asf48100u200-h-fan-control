@@ -20,8 +20,9 @@ Known unresolved risks include:
 
 - no official recovery procedure for an interrupted or rejected update;
 - unknown compatibility across hardware revisions;
-- no proof that the updater authenticates, transforms, or validates every
-  image in the same way;
+- the identified test unit with Windows iPower 2.1.2.0 did not enforce vendor
+  authenticity or firmware-version checks before the observed update; other
+  devices, board revisions, and updater versions may behave differently;
 - more fan runtime, noise, dust ingestion, and bearing wear;
 - possible interaction with thermal conditions absent from the test day;
 - possible stop/restart cycling caused by enclosure thermal lag; the public

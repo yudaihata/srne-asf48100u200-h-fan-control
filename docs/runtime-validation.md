@@ -24,6 +24,12 @@ board-revision compatibility accompanied it. These observations must not be
 inferred for another device, and no serial number is retained in this public
 repository.
 
+On this identified unit with Windows iPower 2.1.2.0, the update path did not
+enforce that the selected file was an official vendor image or reject it based
+on firmware-version metadata. This is a runtime observation for this unit and
+updater combination, not evidence that other devices, board revisions, or
+updater versions behave the same way.
+
 The aggressive `fan35C_max60C_off32C` candidate was installed on a test inverter and
 reported to operate normally, with increased audible fan activity. A 24-hour
 Home Assistant history export was then compared with a stock-firmware day.

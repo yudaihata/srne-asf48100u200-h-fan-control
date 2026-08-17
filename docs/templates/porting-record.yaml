@@ -38,6 +38,8 @@ runtime_context:
     name: unknown
     platform: unknown
     version: unknown
+    authenticity_check: unknown
+    version_check: unknown
   recovery_method: unknown
 
 fan_control:
