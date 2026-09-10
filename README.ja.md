@@ -97,6 +97,19 @@ C28x即値で正確に表現するためのものです。Browser Patcherの最�
 `d4b4f4590689ae2effedf40e3999da8d4b9dfdcac7a1eff4635d0eca6d644600`
 です。それ以外のファームウェアには適用できません。
 
+## 参照資料と原本の取得元
+
+- 製品説明書：[SRNE ASFシリーズ 48 V 8–10 kW split-phase US
+  manual](https://www.srnesolar.com/userfiles/files/2024/09/11/ASF%2048V%208-10K%20split-phase%20US%20manual.pdf)
+  （メーカー公開PDF）
+- レジスタ資料：`SRNE Solar Charge Inverter MODBUS Protocol V1.96`
+  （2024-01-11改訂）。名称と版のみを記載し、このリポジトリでは配布しません。
+- 原本ファームウェア：`ASF48100SU200_V8.16.9.bin`は、
+  [株式会社スマートトレーディングの公開SRNEダウンロードページ](https://smart-trading.co.jp/srne/)
+  で配布されていた`ASF48100SU200_V8.16.9.zip`から取得しました。ページの公開状況は
+  2026-09-10に再確認しています。同社による本プロジェクトの承認・関与を示すもの
+  ではありません。
+
 ## 資料
 
 - [`docs/static-analysis.md`](docs/static-analysis.md)：制御ロジック、命令、
