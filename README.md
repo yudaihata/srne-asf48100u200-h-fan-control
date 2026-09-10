@@ -101,6 +101,20 @@ this advanced path.
 The expected source SHA-256 is
 `d4b4f4590689ae2effedf40e3999da8d4b9dfdcac7a1eff4635d0eca6d644600`.
 
+## References and source provenance
+
+- Product manual: [SRNE ASF series 48 V 8–10 kW split-phase US
+  manual](https://www.srnesolar.com/userfiles/files/2024/09/11/ASF%2048V%208-10K%20split-phase%20US%20manual.pdf)
+  (manufacturer-published PDF).
+- Register reference: `SRNE Solar Charge Inverter MODBUS Protocol V1.96`
+  (revision 2024-01-11). The document is identified here by title and version
+  but is not redistributed by this repository.
+- Source firmware: the pristine `ASF48100SU200_V8.16.9.bin` was extracted from
+  `ASF48100SU200_V8.16.9.zip`, offered on [Smart Trading's public SRNE download
+  page](https://smart-trading.co.jp/srne/). Page availability was rechecked on
+  2026-09-10. This does not imply Smart Trading's endorsement of or involvement
+  in this project.
+
 ## Repository contents
 
 - [`docs/static-analysis.md`](docs/static-analysis.md): recovered control path,
